@@ -1,8 +1,5 @@
 export class LoginUserModel {
-    constructor(
-        username: String,
-        password: String
-    ) {
-
-    }
+  username: string = "";
+  password: string = "";
+  constructor() {}
 }

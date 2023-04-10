@@ -5,6 +5,8 @@ import { Formik } from "formik";
 import { LoginUserModel } from "../models/LoginUser.model";
 import { TextFields } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
+import { axiosInstance } from "../axios/axiosInstance";
+
 export default function LoginPage() {
     const theme = useTheme();
     const navigate = useNavigate();
@@ -17,11 +19,22 @@ export default function LoginPage() {
 
     const loginSchema = yup.object().shape({
         username: yup.string().required("username is required"),
-        password: yup.string().required("password is requried").min(8, "Please enter at least 8 characters"),
+        password: yup.string().min(8, "Please enter at least 8 characters").required("password is requried"),
     });
 
     const onSubmitLogin = (values: LoginUserModel) => {
-        console.log(values);
+        axiosInstance.post("/auth/sign-in", {
+            username: values.username,
+            password: values.password
+        }).then((res) => {
+            if (res.status == 200) {
+                console.log(res.data);
+                localStorage.setItem("access-token", res.data.access_token)
+                window.location.href = "/"
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
     }
 
     return (
@@ -95,20 +108,7 @@ export default function LoginPage() {
                                     error={!!touched.password && !!errors.password}
                                     helperText={touched.password && errors.password}
                                 ></TextField>
-                                {/* <Box
-                                    display={"flex"}
-                                    justifyContent="center"
-                                    alignItems={"center"}
-                                    gap={"1rem"}
-                                >
-                                    <Button type="submit" color="primary" variant="contained" onClick={onSubmitLogin} >
-                                        Login
-                                    </Button>
-                                    <Button type="submit" color="secondary"  variant="contained" onClick={() => navigate("/register")}>
-                                        Register 
-                                    </Button>
-                                </Box> */}
-                                <Button type="submit" color="primary" variant="contained" onClick={onSubmitLogin} >
+                                <Button type="submit" color="primary" variant="contained">
                                     Login
                                 </Button>
                             </Box>
