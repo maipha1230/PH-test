@@ -6,6 +6,7 @@ import { LoginUserModel } from "../models/LoginUser.model";
 import { TextFields } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../axios/axiosInstance";
+import { successAlert } from "../sweetAlert/sweetAlert";
 
 export default function LoginPage() {
     const theme = useTheme();
@@ -18,8 +19,8 @@ export default function LoginPage() {
     };
 
     const loginSchema = yup.object().shape({
-        username: yup.string().required("username is required"),
-        password: yup.string().min(8, "Please enter at least 8 characters").required("password is requried"),
+        username: yup.string().required("กรุณากรอกชื่อผู้ใช้งาน"),
+        password: yup.string().min(8, "กรุณากรอกอย่างน้อย 8 ตัวอักษร").required("กรุณากรอกรหัสผ่าน"),
     });
 
     const onSubmitLogin = (values: LoginUserModel) => {
@@ -28,9 +29,10 @@ export default function LoginPage() {
             password: values.password
         }).then((res) => {
             if (res.status == 200) {
-                console.log(res.data);
                 localStorage.setItem("access-token", res.data.access_token)
-                window.location.href = "/"
+                successAlert("เข้าสู่ระบบสำเร็จ").then(() => {
+                    window.location.href = "/"
+                })
             }
         }).catch((err) => {
             console.log(err);
@@ -59,11 +61,11 @@ export default function LoginPage() {
                 sx={{ backdropFilter: "blur(5px)" }}
             >
                 <Typography variant="h4" fontWeight={"bold"} sx={{ color: "#2e5596" }}>
-                    LOGIN
+                    เข้าสู่ระบบ
                 </Typography>
                 <img src="/Untitled-1-01.png" width={"200px"} style={{ objectFit: "cover" }} />
                 <Typography variant="h6" sx={{ color: "#2e5596" }}>
-                    Principal Healthcare User Management
+                    ระบบจัดการผู้ใช้งาน Principal Healthcare
                 </Typography>
                 <Formik
                     onSubmit={onSubmitLogin}
@@ -88,7 +90,7 @@ export default function LoginPage() {
                                     fullWidth
                                     variant="outlined"
                                     type={"text"}
-                                    label="Username"
+                                    label="ชื่อผู้ใช้งาน"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.username}
@@ -100,7 +102,7 @@ export default function LoginPage() {
                                     fullWidth
                                     variant="outlined"
                                     type={"password"}
-                                    label="Password"
+                                    label="รหัสผ่าน"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.password}
@@ -109,7 +111,7 @@ export default function LoginPage() {
                                     helperText={touched.password && errors.password}
                                 ></TextField>
                                 <Button type="submit" color="primary" variant="contained">
-                                    Login
+                                    เข้าสู่ระบบ
                                 </Button>
                             </Box>
                         </form>
