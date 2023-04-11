@@ -20,10 +20,11 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import { useNavigate } from 'react-router-dom';
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
@@ -101,12 +102,18 @@ export default function SideBar({ open, handleDrawerClose }: MenuProps) {
             title: "สมุดบัญชีผู้ใช้งาน",
             to: "/user-bank-account",
             icon: <AccountBalanceWalletIcon />
+        },
+        {
+            title: "ธนาคาร",
+            to: "/banks",
+            icon: <AccountBalanceIcon />
         }
     ]
+
     return (
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant="permanent" open={open} >
             <DrawerHeader>
-                <img src="/Untitled-1-01.png" width={"150px"} style={{ marginRight: "30px" }} />
+                <img src="/Untitled-1-01.png" width={"120px"} style={{ marginRight: "30px" }} />
                 <IconButton onClick={handleDrawerClose}>
                     {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>

@@ -6,35 +6,74 @@ import HospitalDialog from '../components/HospitalDialog.js';
 import { ensureRemoveHospital, ensureRemoveUser, successAlert } from '../sweetAlert/sweetAlert.js';
 import { UserModel } from '../models/User.model.js';
 import UserDialog from '../components/UserDialog.js';
+import UserHospitalDialog from '../components/UserHospitalDialog.js';
 
 export default function User() {
   const theme = useTheme();
   const [users, setUsers] = useState<UserModel[] | null>(null)
   const [dialogUser, setDialogUser] = useState<boolean>(false)
+  const [dialogUserHospital, setDialogUserHospital] = useState<boolean>(false)
   const [userId, setUserId] = useState<number | null>(null)
 
   const column_data: GridColDef[] = [
-    { field: 'user_code', headerName: 'รหัสผู้ใช้งาน', width: 200 },
+    { field: 'user_code', headerName: 'รหัสผู้ใช้งาน', width: 150 },
     { field: 'user_firstname_th', headerName: 'ชื่อ(ไทย)', flex: 1 },
     { field: 'user_lastname_th', headerName: 'นามสกุล(ไทย)', flex: 1 },
     { field: 'user_firstname_en', headerName: 'ชื่อ(อังกฤษ)', flex: 1 },
     { field: 'user_lastname_en', headerName: 'นามสกุล(อังกฤษ)', flex: 1 },
     {
-      field: 'created_at', headerName: 'เข้าร่วมเมื่อ', flex: 1, valueFormatter: (params) => new Date(params.value).toLocaleDateString()
+      field: 'created_at', headerName: 'เข้าร่วมเมื่อ', width: 150, valueFormatter: (params) => new Date(params.value).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
     },
     {
-      field: 'user_id', headerName: 'จัดการ', flex: 1, renderCell: (row) => {
-        return <Box display={"flex"} flexDirection={"row"} gap={1} justifyContent={"center"} alignItems={"center"}>
-          <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
+      field: 'user_status', headerName: 'สถานะ', width: 150, renderCell: (row) => {
+        return <Box width={"60%"} gap={1} m={"0 auto"} borderRadius={1.5} display={"flex"} justifyContent={"center"} sx={{ backgroundColor: row.value == 1 ? 'green' : 'gray' }}>
+          <Typography color={'white'}>{row.value == 1 ? 'อนุมัติแล้ว' : 'ยังไม่อนุมัติ'}</Typography>
+        </Box>
+
+      }
+    },
+    {
+      field: 'user_id', headerName: 'จัดการ', flex: 1.5, renderCell: (row) => {
+        return <Box display={"flex"} flexDirection={"row"} gap={0.5} justifyContent={"center"} alignItems={"center"}>
+          <Button  color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
             แก้ไข
           </Button>
-          <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
+          <Button  color='secondary' variant='contained' onClick={() => onHospitalClick(row.value)}>
+            โรงพยาบาล
+          </Button>
+          <Button  color='success' variant='contained' onClick={() => onHospitalClick(row.value)}>
+            สมุดบัญชี
+          </Button>
+          <Button  color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
             ลบ
           </Button>
         </Box>
       }
     }
   ]
+
+  const handleDialogOpen = () => {
+    setDialogUser(true)
+  }
+
+  const handleDialogClose = () => {
+    setDialogUser(false)
+    setUserId(null)
+  }
+
+  const handleUserHospitalDialogOpen = () => {
+    setDialogUserHospital(true)
+  }
+
+  const handleUserHospitalDialogClose = () => {
+    setDialogUserHospital(false)
+    setUserId(null)
+  }
+
 
   //use effect
   useEffect(() => {
@@ -68,13 +107,9 @@ export default function User() {
     })
   }
 
-  const handleDialogOpen = () => {
-    setDialogUser(true)
-  }
-
-  const handleDialogClose = () => {
-    setDialogUser(false)
-    setUserId(null)
+  const onHospitalClick = (id: number) => {
+    setUserId(id)
+    handleUserHospitalDialogOpen()
   }
 
 
@@ -98,11 +133,15 @@ export default function User() {
             components={{ Toolbar: GridToolbar }}
             showCellVerticalBorder
             showColumnVerticalBorder
+            sx={{ width: "100%" }}
           />
         )}
       </Box>
       {/* dialog user */}
       <UserDialog open={dialogUser} handleDialogClose={handleDialogClose} userId={userId} />
+
+      {/* dialog user hospital */}
+      <UserHospitalDialog open={dialogUserHospital} handleDialogClose={handleUserHospitalDialogClose} userId={userId} />
 
     </Box>
   )

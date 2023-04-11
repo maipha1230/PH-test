@@ -11,7 +11,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useEffect, useState } from 'react';
 import { logoutAlert } from '../sweetAlert/sweetAlert';
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;

@@ -58,3 +58,39 @@ export const ensureRemoveUser = () => {
         cancelButtonText: "ไม่"
     })
 }
+
+export const ensureRemoveBank = () => {
+    return Swal.fire({
+        title: "Are you sure ?",
+        text: 'คุณต้องการลบธนาคารนี้ใช่หรือไม่?',
+        icon: "question",
+        showConfirmButton: true,
+        confirmButtonText: "ใช่",
+        showCancelButton: true,
+        cancelButtonText: "ไม่"
+    })
+}
+
+export const ensureAddUserHospital = () => {
+    return Swal.fire({
+        title: "Are you sure ?",
+        text: 'คุณต้องการบรรจุเข้าโรงพยาลนี้ใช่หรือไม่?',
+        icon: "question",
+        showConfirmButton: true,
+        confirmButtonText: "ใช่",
+        showCancelButton: true,
+        cancelButtonText: "ไม่"
+    })
+}
+
+export const ensureRemoveUserHospital = () => {
+    return Swal.fire({
+        title: "Are you sure ?",
+        text: 'คุณต้องนำออกจากรายการบรรจุโรงพยาลนี้ใช่หรือไม่?',
+        icon: "question",
+        showConfirmButton: true,
+        confirmButtonText: "ใช่",
+        showCancelButton: true,
+        cancelButtonText: "ไม่"
+    })
+}

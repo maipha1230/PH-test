@@ -16,7 +16,7 @@ import { successAlert } from '../sweetAlert/sweetAlert';
 const userSchema = yup.object().shape({
     user_code: yup.string().required("กรุณากรอกรหัสผู้ใช้งาน"),
     user_firstname_th: yup.string().required("กรุณากรอกชื่อไทยผู้ใช้งาน"),
-    user_lastname_th: yup.string().required("กรุณากรอกนามสกุลอังกฤษผู้ใช้งาน"),
+    user_lastname_th: yup.string().required("กรุณากรอกนามสกุลไทยผู้ใช้งาน"),
     user_firstname_en: yup.string().required("กรุณากรอกชื่ออังกฤษผู้ใช้งาน"),
     user_lastname_en: yup.string().required("กรุณากรอกนามสกุลอังกฤษผู้ใช้งาน"),
 });
@@ -68,6 +68,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                     user_firstname_en: res.data.user_firstname_en,
                     user_lastname_en: res.data.user_lastname_en,
                 })
+                setUserStatus(res.data.user_status)
             }
         }
     }
@@ -103,7 +104,23 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
     }
 
     const handleUserStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserStatus(event.target.checked == true ? 1 : 0);
+        if (event.target.checked) {
+            setUserStatus(1)
+        } else {
+            setUserStatus(0)
+        }
+
+        changeUserStatus()
+    }
+
+    const changeUserStatus = () => {
+        if (userId) {
+            axiosInstance.put(`/users/change-user-status/${userId}`, {}).then((res) => {
+                if (res.status == 200) {
+                    successAlert(res.data)
+                }
+            })
+        }
     }
 
     return (
@@ -184,7 +201,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                                     fullWidth
                                     variant="outlined"
                                     type={"text"}
-                                    label="ชื่อโรงพยาบาล(อังกฤษ)"
+                                    label="ชื่อ(อังกฤษ)"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.user_firstname_en}

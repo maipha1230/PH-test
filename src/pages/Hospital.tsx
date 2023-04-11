@@ -17,7 +17,11 @@ export default function Hospital() {
     { field: 'hospital_name_th', headerName: 'ชื่อไทย', flex: 1 },
     { field: 'hospital_name_en', headerName: 'ชื่ออังกฤษ', flex: 1 },
     {
-      field: 'created_at', headerName: 'เพิ่มเมื่อ', width: 200, valueFormatter: (params) => new Date(params.value).toLocaleDateString()
+      field: 'created_at', headerName: 'เพิ่มเมื่อ', width: 200, valueFormatter: (params) => new Date(params.value).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
     },
     {
       field: 'hospital_id', headerName: 'จัดการ', flex: 1, renderCell: (row) => {

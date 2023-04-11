@@ -7,6 +7,7 @@ const User = lazy(() => import("../pages/User"))
 const BankAccount = lazy(() => import("../pages/BankAccount"))
 const LoginPage = lazy(() => import("../pages/LoginPage"))
 const RegisterPage = lazy(() => import("../pages/RegisterPage"))
+const Bank = lazy(() => import("../pages/Bank"))
 
 const useAuth = () => {
     let token = localStorage.getItem("access-token")
@@ -43,6 +44,10 @@ export default function Routes() {
                     path: "user-bank-account",
                     element: <BankAccount />
                 },
+                {
+                    path: "/banks",
+                    element: <Bank />
+                }
             ]
         },
         {
