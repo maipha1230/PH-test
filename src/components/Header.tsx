@@ -9,6 +9,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useEffect, useState } from 'react';
+import { logoutAlert } from '../sweetAlert/sweetAlert';
 
 const drawerWidth = 240;
 
@@ -19,7 +20,8 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
+  // zIndex: theme.zIndex.drawer + 1,
+  zIndex: 1000,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -27,6 +29,7 @@ const AppBar = styled(MuiAppBar, {
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
+    zIndex: 990,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -49,6 +52,15 @@ export default function Header({ open, handleDrawerOpen }: HeaderProps) {
       setDate(new Date())
     }, 1000)
   }, [])
+
+  const onLogoutClick = () => {
+    logoutAlert().then((res) => {
+      if (res.isConfirmed) {
+        localStorage.removeItem("access-token")
+        window.location.href = "/"
+      }
+    })
+  }
 
   return (
     <AppBar position="fixed" open={open}>
@@ -87,7 +99,7 @@ export default function Header({ open, handleDrawerOpen }: HeaderProps) {
           </Box>
           <Box display={"flex"}>
             <Tooltip title="Log Out">
-              <IconButton>
+              <IconButton onClick={onLogoutClick}>
                 <LogoutIcon sx={{ color: "#ffff" }} />
               </IconButton>
             </Tooltip>

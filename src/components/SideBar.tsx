@@ -58,6 +58,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         width: drawerWidth,
+        zIndex: 500,
         flexShrink: 0,
         whiteSpace: 'nowrap',
         boxSizing: 'border-box',
@@ -82,22 +83,22 @@ export default function SideBar({ open, handleDrawerClose }: MenuProps) {
     const navigate = useNavigate();
     const menu = [
         {
-            title: "Dashboard",
+            title: "แดชบอร์ด",
             to: "/dashboard",
             icon: <DashboardIcon />
         },
         {
-            title: "Hospital",
+            title: "โรงพยาบาล",
             to: "/hospitals",
             icon: <LocalHospitalIcon />
         },
         {
-            title: "User",
+            title: "ผู้ใช้งาน",
             to: "/users",
             icon: <PeopleOutlinedIcon />
         },
         {
-            title: "Bank Account",
+            title: "สมุดบัญชีผู้ใช้งาน",
             to: "/user-bank-account",
             icon: <AccountBalanceWalletIcon />
         }
