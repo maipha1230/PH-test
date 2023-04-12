@@ -8,8 +8,8 @@ import { TextField, Button, Box } from "@mui/material"
 import { HospitalModel } from '../models/Hospital.model';
 import * as yup from "yup";
 import { Formik } from "formik";
-import { axiosInstance } from '../axios/axiosInstance';
 import { successAlert } from '../sweetAlert/sweetAlert';
+import axios from 'axios';
 
 
 
@@ -51,7 +51,7 @@ export default function HospitalDialog({ open, handleDialogClose, hospitalId = n
 
     const checkInputForm = async () => {
         if (hospitalId) {
-            const res = await axiosInstance.get(`/hospitals/get-hospital/${hospitalId}`)
+            const res = await axios.get(`/hospitals/get-hospital/${hospitalId}`)
             if (res.status == 200) {
                 setInitialHospitalForm({
                     hospital_code: res.data.hospital_code,
@@ -64,7 +64,7 @@ export default function HospitalDialog({ open, handleDialogClose, hospitalId = n
 
     const onsubmitHospitalForm = async (values: HospitalModel) => {
         if (hospitalId) {
-            const res = await axiosInstance.put(`/hospitals/update-hospital/${hospitalId}`, {
+            const res = await axios.put(`/hospitals/update-hospital/${hospitalId}`, {
                 hospital_code: values.hospital_code,
                 hospital_name_th: values.hospital_name_th,
                 hospital_name_en: values.hospital_name_en,
@@ -75,7 +75,7 @@ export default function HospitalDialog({ open, handleDialogClose, hospitalId = n
                 })
             }
         } else {
-            const res = await axiosInstance.post('/hospitals/create-hospital', {
+            const res = await axios.post('/hospitals/create-hospital', {
                 hospital_code: values.hospital_code,
                 hospital_name_th: values.hospital_name_th,
                 hospital_name_en: values.hospital_name_en,

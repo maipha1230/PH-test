@@ -1,18 +1,21 @@
 import { Box, Button, Divider, Typography, useTheme, TextField } from '@mui/material'
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react'
-import { axiosInstance } from "../axios/axiosInstance.js"
 import HospitalDialog from '../components/HospitalDialog.js';
 import { ensureRemoveHospital, ensureRemoveUser, successAlert } from '../sweetAlert/sweetAlert.js';
 import { UserModel } from '../models/User.model.js';
 import UserDialog from '../components/UserDialog.js';
 import UserHospitalDialog from '../components/UserHospitalDialog.js';
+import axios from 'axios';
+import UserBankDialog from '../components/UserBankDialog.js';
+import { useSearchParams } from 'react-router-dom';
 
 export default function User() {
   const theme = useTheme();
   const [users, setUsers] = useState<UserModel[] | null>(null)
   const [dialogUser, setDialogUser] = useState<boolean>(false)
   const [dialogUserHospital, setDialogUserHospital] = useState<boolean>(false)
+  const [dialogUserBank, setDialogUserBank] = useState<boolean>(false)
   const [userId, setUserId] = useState<number | null>(null)
 
   const column_data: GridColDef[] = [
@@ -38,23 +41,35 @@ export default function User() {
     },
     {
       field: 'user_id', headerName: 'จัดการ', flex: 1.5, renderCell: (row) => {
-        return <Box display={"flex"} flexDirection={"row"} gap={0.5} justifyContent={"center"} alignItems={"center"}>
-          <Button  color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
+        return <Box display={"flex"} flexDirection={"row"} gap={0.5} justifyContent={"center"} alignItems={"center"} width={"100%"}>
+          <Button color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
             แก้ไข
           </Button>
-          <Button  color='secondary' variant='contained' onClick={() => onHospitalClick(row.value)}>
+          <Button color='secondary' variant='contained' onClick={() => onHospitalClick(row.value)}>
             โรงพยาบาล
           </Button>
-          <Button  color='success' variant='contained' onClick={() => onHospitalClick(row.value)}>
+          <Button color='success' variant='contained' onClick={() => onUserBankClick(row.value)}>
             สมุดบัญชี
           </Button>
-          <Button  color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
+          <Button color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
             ลบ
           </Button>
         </Box>
       }
     }
   ]
+
+  const [searchParams] = useSearchParams();
+
+  //use effect
+  useEffect(() => {
+    getUsers()
+    if (searchParams.get("user_id")) {
+      setUserId(Number(searchParams.get("user_id")))
+      handleUserHospitalDialogOpen()
+    }
+
+  }, [dialogUser])
 
   const handleDialogOpen = () => {
     setDialogUser(true)
@@ -73,15 +88,17 @@ export default function User() {
     setDialogUserHospital(false)
     setUserId(null)
   }
+  const handleUserBankDialogOpen = () => {
+    setDialogUserBank(true)
+  }
 
-
-  //use effect
-  useEffect(() => {
-    getUsers()
-  }, [dialogUser])
+  const handleUserBankDialogClose = () => {
+    setDialogUserBank(false)
+    setUserId(null)
+  }
 
   const getUsers = () => {
-    axiosInstance.get("/users/get-users").then((res) => {
+    axios.get("/users/get-users").then((res) => {
       if (res.status == 200) {
         setUsers(res.data)
       }
@@ -96,7 +113,7 @@ export default function User() {
   const onDeleteClick = (id: number) => {
     ensureRemoveUser().then((check) => {
       if (check.isConfirmed) {
-        axiosInstance.delete(`users/remove-user/${id}`).then((res) => {
+        axios.delete(`users/remove-user/${id}`).then((res) => {
           if (res.status == 200) {
             successAlert(res.data).then(() => {
               getUsers();
@@ -110,6 +127,11 @@ export default function User() {
   const onHospitalClick = (id: number) => {
     setUserId(id)
     handleUserHospitalDialogOpen()
+  }
+
+  const onUserBankClick = (id: number) => {
+    setUserId(id)
+    handleUserBankDialogOpen()
   }
 
 
@@ -138,10 +160,13 @@ export default function User() {
         )}
       </Box>
       {/* dialog user */}
-      <UserDialog open={dialogUser} handleDialogClose={handleDialogClose} userId={userId} />
+      {dialogUser && <UserDialog open={dialogUser} handleDialogClose={handleDialogClose} userId={userId} />}
 
       {/* dialog user hospital */}
-      <UserHospitalDialog open={dialogUserHospital} handleDialogClose={handleUserHospitalDialogClose} userId={userId} />
+      {dialogUserHospital && <UserHospitalDialog open={dialogUserHospital} handleDialogClose={handleUserHospitalDialogClose} userId={userId} />}
+
+      {/* dialog user bank */}
+      {dialogUserBank && <UserBankDialog open={dialogUserBank} handleDialogClose={handleUserBankDialogClose} userId={userId} />}
 
     </Box>
   )

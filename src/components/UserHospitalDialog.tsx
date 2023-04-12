@@ -7,20 +7,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button, Box, Switch, Typography, Chip } from "@mui/material"
 import * as yup from "yup";
 import { Formik } from "formik";
-import { axiosInstance } from '../axios/axiosInstance';
 import { UserModel } from '../models/User.model';
 import { ensureAddUserHospital, ensureRemoveUserHospital, successAlert } from '../sweetAlert/sweetAlert';
 import { HospitalModel } from '../models/Hospital.model';
-
-
-
-const userSchema = yup.object().shape({
-    user_code: yup.string().required("กรุณากรอกรหัสผู้ใช้งาน"),
-    user_firstname_th: yup.string().required("กรุณากรอกชื่อไทยผู้ใช้งาน"),
-    user_lastname_th: yup.string().required("กรุณากรอกนามสกุลไทยผู้ใช้งาน"),
-    user_firstname_en: yup.string().required("กรุณากรอกชื่ออังกฤษผู้ใช้งาน"),
-    user_lastname_en: yup.string().required("กรุณากรอกนามสกุลอังกฤษผู้ใช้งาน"),
-});
+import axios from 'axios';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 type dialogInput = {
     open: boolean,
@@ -40,6 +31,7 @@ type UserHospitalModel = {
 export default function UserHospitalDialog({ open, handleDialogClose, userId = null }: dialogInput) {
 
     const [userHospital, setUserHospital] = useState<UserHospitalModel[] | null>([])
+    const navigate = useNavigate();
 
     useEffect(() => {
         getUserHospital();
@@ -47,7 +39,7 @@ export default function UserHospitalDialog({ open, handleDialogClose, userId = n
 
     const getUserHospital = async () => {
         if (userId) {
-            const res = await axiosInstance.get(`/users/get-user-hospital/${userId}`)
+            const res = await axios.get(`/users/get-user-hospital/${userId}`)
             if (res.status == 200) {
                 const user_hospital = res.data.user_hospital
                 const hospitals: HospitalModel[] = res.data.hospitals
@@ -75,13 +67,14 @@ export default function UserHospitalDialog({ open, handleDialogClose, userId = n
     const closeModal = () => {
         userId = null
         handleDialogClose()
+        navigate("/users")
     }
 
     const onHospitalClick = (isWorking: boolean, hospital_id?: number) => {
         if (isWorking == true) {
             ensureAddUserHospital().then((check) => {
                 if (check.isConfirmed) {
-                    axiosInstance.post(`/users/add-remove-user-hospital/${userId}/${hospital_id}`, {
+                    axios.post(`/users/add-remove-user-hospital/${userId}/${hospital_id}`, {
                         isWorking: isWorking
                     }).then((res) => {
                         if (res.status == 200) {
@@ -95,7 +88,7 @@ export default function UserHospitalDialog({ open, handleDialogClose, userId = n
         } else {
             ensureRemoveUserHospital().then((check) => {
                 if (check.isConfirmed) {
-                    axiosInstance.post(`/users/add-remove-user-hospital/${userId}/${hospital_id}`, {
+                    axios.post(`/users/add-remove-user-hospital/${userId}/${hospital_id}`, {
                         isWorking: isWorking
                     }).then((res) => {
                         if (res.status == 200) {

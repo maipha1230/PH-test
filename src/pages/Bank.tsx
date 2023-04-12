@@ -1,16 +1,22 @@
 import { Box, Button, Divider, Typography, useTheme, TextField } from '@mui/material'
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react'
-import { axiosInstance } from "../axios/axiosInstance.js"
+import React, { useEffect, useMemo, useState } from 'react'
 import { ensureRemoveBank, successAlert } from '../sweetAlert/sweetAlert.js';
 import { BankModel } from '../models/Bank.model.js';
 import BankDialog from '../components/BankDialog.js';
+import axios from 'axios';
 
 export default function Bank() {
     const theme = useTheme();
     const [banks, setBanks] = useState<BankModel[] | null>(null)
     const [dialogBank, setDialogBank] = useState<boolean>(false)
     const [bankId, setBankId] = useState<number | null>(null)
+
+
+    useEffect(() => {
+       getBanks()
+    }, [dialogBank])
+    
 
     const column_data: GridColDef[] = [
         { field: 'bank_name_th', headerName: 'ธนาคาร(ไทย)', flex: 1 },
@@ -29,18 +35,13 @@ export default function Bank() {
         }
     ]
 
-    //use effect
-    useEffect(() => {
-        getBanks()
-    }, [dialogBank])
-
-    const getBanks = () => {
-        axiosInstance.get("/banks/get-banks").then((res) => {
-            if (res.status == 200) {
-                setBanks(res.data)
-            }
-        })
+    const getBanks = async() => {
+        const res = await axios.get("/banks/get-banks")
+        if (res.status == 200) {
+            setBanks(res.data)
+        }
     }
+    // useMemo(() => getBanks(), [])
 
     const onDetailClick = (id: number) => {
         setBankId(id)
@@ -50,7 +51,7 @@ export default function Bank() {
     const onDeleteClick = (id: number) => {
         ensureRemoveBank().then((check) => {
             if (check.isConfirmed) {
-                axiosInstance.delete(`banks/remove-bank/${id}`).then((res) => {
+                axios.delete(`banks/remove-bank/${id}`).then((res) => {
                     if (res.status == 200) {
                         successAlert(res.data).then(() => {
                             getBanks();
@@ -69,8 +70,6 @@ export default function Bank() {
         setDialogBank(false)
         setBankId(null)
     }
-
-
     return (
         <Box display={"flex"} flexDirection={"column"} p={2}>
             <Typography variant='h5'>
@@ -91,12 +90,12 @@ export default function Bank() {
                         // components={{ Toolbar: GridToolbar }}
                         showCellVerticalBorder
                         showColumnVerticalBorder
-                        
+
                     />
                 )}
             </Box>
             {/* dialog bank */}
-            <BankDialog open={dialogBank} handleDialogClose={handleDialogClose} bankId={bankId} />
+            {dialogBank && <BankDialog open={dialogBank} handleDialogClose={handleDialogClose} bankId={bankId} />}
 
         </Box>
     )

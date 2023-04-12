@@ -8,9 +8,9 @@ import { TextField, Button, Box } from "@mui/material"
 import { HospitalModel } from '../models/Hospital.model';
 import * as yup from "yup";
 import { Formik } from "formik";
-import { axiosInstance } from '../axios/axiosInstance';
 import { successAlert } from '../sweetAlert/sweetAlert';
 import { BankModel } from '../models/Bank.model';
+import axios from 'axios';
 
 
 
@@ -49,7 +49,7 @@ export default function BankDialog({ open, handleDialogClose, bankId = null }: d
 
     const checkInputForm = async () => {
         if (bankId) {
-            const res = await axiosInstance.get(`/banks/get-bank/${bankId}`)
+            const res = await axios.get(`/banks/get-bank/${bankId}`)
             if (res.status == 200) {
                 setInitialBankForm({
                     bank_name_th: res.data.bank_name_th,
@@ -61,7 +61,7 @@ export default function BankDialog({ open, handleDialogClose, bankId = null }: d
 
     const onsubmitHospitalForm = async (values: BankModel) => {
         if (bankId) {
-            const res = await axiosInstance.put(`/banks/update-bank/${bankId}`, {
+            const res = await axios.put(`/banks/update-bank/${bankId}`, {
                 bank_name_th: values.bank_name_th,
                 bank_name_en: values.bank_name_en,
             })
@@ -71,7 +71,7 @@ export default function BankDialog({ open, handleDialogClose, bankId = null }: d
                 })
             }
         } else {
-            const res = await axiosInstance.post('/banks/create-bank', {
+            const res = await axios.post('/banks/create-bank', {
                 bank_name_th: values.bank_name_th,
                 bank_name_en: values.bank_name_en,
             })

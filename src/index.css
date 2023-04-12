@@ -35,6 +35,8 @@ body,
   background: #555;
 }
 
+
+
 swal2-containe, swal2-center, swal2-backdrop-show{
   z-index: X;
 }

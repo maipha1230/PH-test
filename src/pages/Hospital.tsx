@@ -1,19 +1,21 @@
 import { Box, Button, Divider, Typography, useTheme, TextField } from '@mui/material'
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react'
-import { axiosInstance } from "../axios/axiosInstance.js"
 import { HospitalModel } from '../models/Hospital.model.js';
 import HospitalDialog from '../components/HospitalDialog.js';
 import { ensureRemoveHospital, successAlert } from '../sweetAlert/sweetAlert.js';
+import axios from 'axios';
+import HospitalUserDialog from '../components/HospitalUserDialog.js';
 
 export default function Hospital() {
   const theme = useTheme();
   const [hospitals, setHospitals] = useState<HospitalModel[] | null>(null)
   const [dialogHospital, setDialogHospital] = useState<boolean>(false)
+  const [dialogUserHospital, setDialogUserHospital] = useState<boolean>(false)
   const [hostpitalId, setHostpitalId] = useState<number | null>(null)
 
   const column_data: GridColDef[] = [
-    { field: 'hospital_code', headerName: 'รหัสโรงพยาบาล',  width: 200 },
+    { field: 'hospital_code', headerName: 'รหัสโรงพยาบาล', width: 200 },
     { field: 'hospital_name_th', headerName: 'ชื่อไทย', flex: 1 },
     { field: 'hospital_name_en', headerName: 'ชื่ออังกฤษ', flex: 1 },
     {
@@ -29,6 +31,9 @@ export default function Hospital() {
           <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
             แก้ไข
           </Button>
+          <Button fullWidth color='secondary' variant='contained' onClick={() => onUserInHospital(row.value)}>
+            พนักงาน
+          </Button>
           <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
             ลบ
           </Button>
@@ -43,7 +48,7 @@ export default function Hospital() {
   }, [dialogHospital])
 
   const getHospitals = () => {
-    axiosInstance.get("/hospitals/get-hospitals").then((res) => {
+    axios.get("/hospitals/get-hospitals").then((res) => {
       if (res.status == 200) {
         setHospitals(res.data)
       }
@@ -52,13 +57,18 @@ export default function Hospital() {
 
   const onDetailClick = (id: number) => {
     setHostpitalId(id)
-    handleDialogOpen()
+    handleDialogHospitalOpen()
+  }
+
+  const onUserInHospital = (id: number) => {
+    setHostpitalId(id)
+    handleDialogUserHospitalOpen()
   }
 
   const onDeleteClick = (id: number) => {
     ensureRemoveHospital().then((check) => {
       if (check.isConfirmed) {
-        axiosInstance.delete(`hospitals/remove-hospital/${id}`).then((res) => {
+        axios.delete(`hospitals/remove-hospital/${id}`).then((res) => {
           if (res.status == 200) {
             successAlert(res.data).then(() => {
               getHospitals();
@@ -69,12 +79,20 @@ export default function Hospital() {
     })
   }
 
-  const handleDialogOpen = () => {
+  const handleDialogHospitalOpen = () => {
     setDialogHospital(true)
   }
 
-  const handleDialogClose = () => {
+  const handleDialogHospitalClose = () => {
     setDialogHospital(false)
+    setHostpitalId(null)
+  }
+  const handleDialogUserHospitalOpen = () => {
+    setDialogUserHospital(true)
+  }
+
+  const handleDialogUserHospitalClose = () => {
+    setDialogUserHospital(false)
     setHostpitalId(null)
   }
 
@@ -86,7 +104,7 @@ export default function Hospital() {
       </Typography>
       <Divider />
       <Box pt={1.5}>
-        <Button variant='contained' color='success' onClick={handleDialogOpen}>
+        <Button variant='contained' color='success' onClick={handleDialogHospitalOpen}>
           เพิ่มโรงพยาบาล
         </Button>
       </Box>
@@ -103,7 +121,9 @@ export default function Hospital() {
         )}
       </Box>
       {/* dialog hospital */}
-      <HospitalDialog open={dialogHospital} handleDialogClose={handleDialogClose} hospitalId={hostpitalId} />
+      {dialogHospital && <HospitalDialog open={dialogHospital} handleDialogClose={handleDialogHospitalClose} hospitalId={hostpitalId} />}
+
+      {dialogUserHospital && <HospitalUserDialog open={dialogUserHospital} handleDialogClose={handleDialogUserHospitalClose} hospitalId={hostpitalId} />}
 
     </Box>
   )

@@ -5,8 +5,8 @@ import { Formik } from "formik";
 import { LoginUserModel } from "../models/LoginUser.model";
 import { TextFields } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosInstance } from "../axios/axiosInstance";
 import { successAlert } from "../sweetAlert/sweetAlert";
+import axios from "axios";
 
 export default function LoginPage() {
     const theme = useTheme();
@@ -24,7 +24,7 @@ export default function LoginPage() {
     });
 
     const onSubmitLogin = (values: LoginUserModel) => {
-        axiosInstance.post("/auth/sign-in", {
+        axios.post("/auth/sign-in", {
             username: values.username,
             password: values.password
         }).then((res) => {

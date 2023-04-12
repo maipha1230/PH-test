@@ -94,3 +94,15 @@ export const ensureRemoveUserHospital = () => {
         cancelButtonText: "ไม่"
     })
 }
+
+export const ensureRemoveUserBankAccount = () => {
+    return Swal.fire({
+        title: "Are you sure ?",
+        text: 'คุณต้องนำออกจากรายการสมุดบัญชีของผู้ใช้ใช่หรือไม่?',
+        icon: "question",
+        showConfirmButton: true,
+        confirmButtonText: "ใช่",
+        showCancelButton: true,
+        cancelButtonText: "ไม่"
+    })
+}

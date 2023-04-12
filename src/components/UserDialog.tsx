@@ -7,10 +7,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button, Box, Switch, Typography } from "@mui/material"
 import * as yup from "yup";
 import { Formik } from "formik";
-import { axiosInstance } from '../axios/axiosInstance';
 import { UserModel } from '../models/User.model';
 import { successAlert } from '../sweetAlert/sweetAlert';
-
+import axios from 'axios';
 
 
 const userSchema = yup.object().shape({
@@ -59,7 +58,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
 
     const checkInputForm = async () => {
         if (userId) {
-            const res = await axiosInstance.get(`/users/get-user/${userId}`)
+            const res = await axios.get(`/users/get-user/${userId}`)
             if (res.status == 200) {
                 setInitialUserForm({
                     user_code: res.data.user_code,
@@ -75,7 +74,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
 
     const onsubmitUserForm = async (values: UserModel) => {
         if (userId) {
-            const res = await axiosInstance.put(`/users/update-user/${userId}`, {
+            const res = await axios.put(`/users/update-user/${userId}`, {
                 user_code: values.user_code,
                 user_firstname_th: values.user_firstname_th,
                 user_lastname_th: values.user_lastname_th,
@@ -88,7 +87,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                 })
             }
         } else {
-            const res = await axiosInstance.post('/users/create-user', {
+            const res = await axios.post('/users/create-user', {
                 user_code: values.user_code,
                 user_firstname_th: values.user_firstname_th,
                 user_lastname_th: values.user_lastname_th,
@@ -115,7 +114,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
 
     const changeUserStatus = () => {
         if (userId) {
-            axiosInstance.put(`/users/change-user-status/${userId}`, {}).then((res) => {
+            axios.put(`/users/change-user-status/${userId}`, {}).then((res) => {
                 if (res.status == 200) {
                     successAlert(res.data)
                 }

@@ -22,6 +22,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import PasswordIcon from '@mui/icons-material/Password';
 import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 220;
@@ -99,14 +100,14 @@ export default function SideBar({ open, handleDrawerClose }: MenuProps) {
             icon: <PeopleOutlinedIcon />
         },
         {
-            title: "สมุดบัญชีผู้ใช้งาน",
-            to: "/user-bank-account",
-            icon: <AccountBalanceWalletIcon />
-        },
-        {
             title: "ธนาคาร",
             to: "/banks",
             icon: <AccountBalanceIcon />
+        },
+        {
+            title: "แก้ไขรหัสผ่าน",
+            to: "/password",
+            icon: <PasswordIcon />
         }
     ]
 
