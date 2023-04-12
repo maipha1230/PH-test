@@ -9,9 +9,11 @@ import axios from 'axios'
 import LoadingModal from './components/LoadingModalRef'
 
 function App() {
+  const loadingModalRef = useRef<any>(null);
   axios.defaults.baseURL = "http://localhost:3001/api"
   axios.interceptors.request.use(
     (config) => {
+      loadingModalRef.current.setOpen(true)
       const token = localStorage.getItem("access-token");
       if (token) {
         config.headers["Authorization"] = `Bearer ${token}`;
@@ -25,15 +27,18 @@ function App() {
 
   axios.interceptors.response.use(
     function (response) {
+      loadingModalRef.current.setOpen(false)
       return response;
     },
     async function (error) {
+      loadingModalRef.current.setOpen(false)
       if (error.response.status === 401) {
         localStorage.removeItem("access-token");
         waringAlert(error.response.data).then(() => {
           window.location.href = "/";
         });
       } else if (error.response.status === 400) {
+        loadingModalRef.current.setOpen(false)
         waringAlert(error.response.data);
       }
     }
@@ -50,6 +55,7 @@ function App() {
         >
           <Routes />
         </Suspense>
+        <LoadingModal ref={loadingModalRef} />
       </div>
     </ThemeProvider>
 
