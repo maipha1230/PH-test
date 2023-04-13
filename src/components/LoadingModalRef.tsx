@@ -1,23 +1,28 @@
-import React, { useState, forwardRef, useImperativeHandle } from "react";
+import React, { useState, forwardRef, useImperativeHandle, Ref } from "react";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const LoadingModal = forwardRef((props, ref) => {
-    useImperativeHandle(ref, () => {
-        return {
-            setOpen: setOpen,
-        }
-    })
-    const [open, setOpen] = useState(false)
+interface LoadingModalProps {}
 
-    return (
-        <Backdrop
-            sx={{ color: '#fff', zIndex: 99999 }}
-            open={open}
-        >
-            <CircularProgress color="inherit" />
-        </Backdrop>
-    )
-})
+export interface LoadingModalRef {
+  setOpen: (open: boolean) => void;
+}
 
-export default LoadingModal
+const LoadingModal = forwardRef<LoadingModalRef, LoadingModalProps>((props, ref) => {
+  const [open, setOpen] = useState(false)
+
+  useImperativeHandle(ref, () => ({
+    setOpen,
+  }));
+
+  return (
+    <Backdrop
+      sx={{ color: '#fff', zIndex: 99999 }}
+      open={open}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  );
+});
+
+export default LoadingModal;
