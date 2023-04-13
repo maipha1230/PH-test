@@ -8,14 +8,14 @@ export default function Dashboard() {
   const [hospitalCount, setHospitalCount] = useState<number | null>(null)
   const [userCount, setUserCount] = useState<number | null>(null)
   const [adminCount, setAdminCount] = useState<number | null>(null)
-  const [bankCount, setBankCount] = useState<number | null>(null)
+  const [userBankCount, setUserBankCount] = useState<number | null>(null)
   const [hospitaUserChart, setHospitalUserChart] = useState<any>(null)
 
   useEffect(() => {
     getHospitaCount()
     getAdminCount()
     getUserCount()
-    getBankCount()
+    getUserBankCount()
     getHospitalUserChart()
   }, [])
 
@@ -37,10 +37,10 @@ export default function Dashboard() {
       setUserCount(res.data.count)
     }
   }
-  const getBankCount = async () => {
-    const res = await axios.get('/banks/get-bank-count')
+  const getUserBankCount = async () => {
+    const res = await axios.get('/banks/get-user-bank-count')
     if (res.status == 200) {
-      setBankCount(res.data.count)
+      setUserBankCount(res.data.count)
     }
   }
 
@@ -142,7 +142,7 @@ export default function Dashboard() {
           </Paper>}
         </Grid>
         <Grid item xs={3}>
-          {bankCount && <Paper elevation={3}
+          {userBankCount && <Paper elevation={3}
             sx={{
               border: "none",
               borderRadius: "1rem",
@@ -150,9 +150,9 @@ export default function Dashboard() {
               display: "flex",
               flexDirection: "column",
             }}>
-            <Typography variant='h6' color={'#f8AC59'}>ธนาคารในระบบ</Typography>
+            <Typography variant='h6' color={'#f8AC59'}>สมุดบัญชีในระบบ</Typography>
             <Box display={"flex"} justifyContent={"center"} alignItems={"center"} width={"100%"}>
-              <Typography variant='h3' color={'#f8AC59'} fontWeight={"bold"}>{bankCount}</Typography>
+              <Typography variant='h3' color={'#f8AC59'} fontWeight={"bold"}>{userBankCount}</Typography>
             </Box>
           </Paper>}
         </Grid>

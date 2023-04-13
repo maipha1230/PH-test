@@ -9,7 +9,7 @@ import axios from 'axios'
 import LoadingModal from './components/LoadingModalRef'
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:3001/api"
+  axios.defaults.baseURL = import.meta.env.VITE_BASE_URL || "http://localhost:3001/api"
   axios.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem("access-token");
