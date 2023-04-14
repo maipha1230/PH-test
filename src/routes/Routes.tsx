@@ -6,7 +6,6 @@ const Hospital = lazy(() => import("../pages/Hospital"))
 const User = lazy(() => import("../pages/User"))
 const BankAccount = lazy(() => import("../pages/BankAccount"))
 const LoginPage = lazy(() => import("../pages/LoginPage"))
-const RegisterPage = lazy(() => import("../pages/RegisterPage"))
 const Bank = lazy(() => import("../pages/Bank"))
 const Password = lazy(() => import("../pages/Password"))
 
@@ -61,9 +60,6 @@ export default function Routes() {
             children: [
                 {
                     path: "login", element: <LoginPage />,
-                },
-                {
-                    path: "register", element: <RegisterPage />
                 },
                 {
                     path: "/", element: <Navigate to="/login" />
