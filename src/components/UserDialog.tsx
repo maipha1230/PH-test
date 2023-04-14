@@ -36,6 +36,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
     })
 
     const [userStatus, setUserStatus] = useState<number | null>(null)
+    const [userCodeExist, setUserCodeExist] = useState<string | null>(null)
 
     useEffect(() => {
         checkInputForm()
@@ -122,6 +123,40 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
         }
     }
 
+    const checkUserCodeExist = (user_code: any) => {
+        if (userId) {
+            const debounce = setTimeout(() => {
+                axios.post(`/users/check-user-code-exist?user_id=${userId}`, {
+                    user_code: user_code
+                }).then((res) => {
+                    if (res.status == 200) {
+                        if (res.data) {
+                            setUserCodeExist(res.data)
+                        } else {
+                            setUserCodeExist(null)
+                        }
+                    }
+                })
+            }, 500)
+            return () => clearTimeout(debounce)
+        } else {
+            const debounce = setTimeout(() => {
+                axios.post(`/users/check-user-code-exist`, {
+                    user_code: user_code
+                }).then((res) => {
+                    if (res.status == 200) {
+                        if (res.data) {
+                            setUserCodeExist(res.data)
+                        } else {
+                            setUserCodeExist(null)
+                        }
+                    }
+                })
+            }, 500)
+            return () => clearTimeout(debounce)
+        }
+    }
+
     return (
         <Dialog open={open} onClose={closeModal} fullWidth >
             <DialogTitle>{userId ? "แก้ไขผู้ใช้งาน" : "เพิ่มผู้ใช้งาน"}</DialogTitle>
@@ -167,11 +202,13 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                                     label="รหัสผู้ใช้งาน"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
+                                    onKeyUp={() => checkUserCodeExist(values.user_code)}
                                     value={values.user_code}
                                     name="user_code"
                                     error={!!touched.user_code && !!errors.user_code}
                                     helperText={touched.user_code && errors.user_code}
                                 ></TextField>
+                                { userCodeExist && <Typography pl={1.5} variant='subtitle2' color={'#fe0000'}>{userCodeExist}</Typography>}
                                 <TextField
                                     fullWidth
                                     variant="outlined"

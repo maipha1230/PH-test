@@ -4,7 +4,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { TextField, Button, Box } from "@mui/material"
+import { TextField, Button, Box, Typography } from "@mui/material"
 import { HospitalModel } from '../models/Hospital.model';
 import * as yup from "yup";
 import { Formik } from "formik";
@@ -31,6 +31,7 @@ export default function HospitalDialog({ open, handleDialogClose, hospitalId = n
         hospital_name_th: "",
         hospital_name_en: "",
     })
+    const [hospitalCodeExist, setHospitalCodeExist] = useState<string | null>(null)
 
     useEffect(() => {
         checkInputForm()
@@ -88,6 +89,40 @@ export default function HospitalDialog({ open, handleDialogClose, hospitalId = n
         }
     }
 
+    const checkHospitalCodeExist = (hospital_code: any) => {
+        if (hospitalId) {
+            const debounce = setTimeout(() => {
+                axios.post(`/hospitals/check-hospital-code-exist?hospital_id=${hospitalId}`, {
+                    hospital_code: hospital_code
+                }).then((res) => {
+                    if (res.status == 200) {
+                        if (res.data) {
+                            setHospitalCodeExist(res.data)
+                        } else {
+                            setHospitalCodeExist(null)
+                        }
+                    }
+                })
+            }, 500)
+            return () => clearTimeout(debounce)
+        } else {
+            const debounce = setTimeout(() => {
+                axios.post(`/hospitals/check-hospital-code-exist`, {
+                    hospital_code: hospital_code
+                }).then((res) => {
+                    if (res.status == 200) {
+                        if (res.data) {
+                            setHospitalCodeExist(res.data)
+                        } else {
+                            setHospitalCodeExist(null)
+                        }
+                    }
+                })
+            }, 500)
+            return () => clearTimeout(debounce)
+        }
+    }
+
     return (
         <Dialog open={open} onClose={closeModal} fullWidth >
             <DialogTitle>{hospitalId ? "แก้ไขโรงพยาบาล" : "เพิ่มโรงพยาบาล"}</DialogTitle>
@@ -121,11 +156,13 @@ export default function HospitalDialog({ open, handleDialogClose, hospitalId = n
                                     label="รหัสโรงพยาบาล"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
+                                    onKeyUp={() => checkHospitalCodeExist(values.hospital_code)}
                                     value={values.hospital_code}
                                     name="hospital_code"
                                     error={!!touched.hospital_code && !!errors.hospital_code}
                                     helperText={touched.hospital_code && errors.hospital_code}
                                 ></TextField>
+                                 { hospitalCodeExist && <Typography pl={1.5} variant='subtitle2' color={'#fe0000'}>{hospitalCodeExist}</Typography>}
                                 <TextField
                                     fullWidth
                                     variant="outlined"

@@ -12,6 +12,7 @@ import axios from 'axios';
 import { BankModel } from '../models/Bank.model';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 
 
@@ -22,7 +23,7 @@ const userBankSchema = yup.object().shape({
 });
 
 const initalUserBankForm = {
-    bank_id: 1,
+    bank_id: 2,
     user_bank_code: "",
     user_bank_name: ""
 }
@@ -40,11 +41,12 @@ type UserBankInput = {
 }
 
 type UserBankModel = {
-    user_bank_id?: number,
-    bank_name_th?: string,
-    bank_name_en?: string,
-    user_bank_code?: string,
-    user_bank_name?: string
+    user_bank_id: number,
+    bank_id: number,
+    bank_name_th: string,
+    bank_name_en: string,
+    user_bank_code: string,
+    user_bank_name: string
 }
 
 
@@ -55,6 +57,9 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
     const [userBank, setUserBank] = useState<UserBankModel[] | null>([])
     const [addUserBank, setAddUserBank] = useState<boolean>(false)
     const [banks, setBanks] = useState<BankModel[]>([])
+    const [editUserBankId, setEditUserBankId] = useState<number | null | undefined>(null)
+    const [initalUserBank, setInitalUserBank] = useState<UserBankInput>(initalUserBankForm)
+
     useEffect(() => {
         getUserBanks()
         getBanks()
@@ -69,6 +74,7 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
             for (let ub of user_bank) {
                 temp.push({
                     user_bank_id: ub.user_bank_id,
+                    bank_id: ub.bank.bank_id,
                     user_bank_code: ub.user_bank_code,
                     user_bank_name: ub.user_bank_name,
                     bank_name_en: ub.bank.bank_name_en,
@@ -108,18 +114,33 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
     }
 
     const onSubmitUserBankForm = (values: UserBankInput) => {
-        axios.post(`/users/create-user-bank-account/${userId}`, {
-            bank_id: values.bank_id,
-            user_bank_code: values.user_bank_code,
-            user_bank_name: values.user_bank_name
-        }).then((res) => {
-            if (res.status == 201) {
-                successAlert(res.data).then(() => {
-                    getUserBanks()
-                    setAddUserBank(false)
-                })
-            }
-        })
+        if (editUserBankId) {
+            axios.put(`/users/edit-user-bank-account/${userId}/${editUserBankId}`, {
+                bank_id: values.bank_id,
+                user_bank_code: values.user_bank_code,
+                user_bank_name: values.user_bank_name
+            }).then((res) => {
+                if (res.status == 201) {
+                    successAlert(res.data).then(() => {
+                        getUserBanks()
+                        onCancelEditUserBank()
+                    })
+                }
+            })
+        } else {
+            axios.post(`/users/create-user-bank-account/${userId}`, {
+                bank_id: values.bank_id,
+                user_bank_code: values.user_bank_code,
+                user_bank_name: values.user_bank_name
+            }).then((res) => {
+                if (res.status == 201) {
+                    successAlert(res.data).then(() => {
+                        getUserBanks()
+                        setAddUserBank(false)
+                    })
+                }
+            })
+        }
     }
 
     const onRemoveUserBankClick = (user_bank_id?: number) => {
@@ -135,6 +156,22 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
         })
     }
 
+    const onEditUserBankClick = (user_bank: UserBankModel) => {
+        setEditUserBankId(user_bank.user_bank_id)
+        setInitalUserBank({
+            bank_id: user_bank.bank_id,
+            user_bank_code: user_bank.user_bank_code,
+            user_bank_name: user_bank.user_bank_name
+        })
+        setAddUserBank(true)
+    }
+
+    const onCancelEditUserBank = () => {
+        setAddUserBank(false)
+        setEditUserBankId(null)
+        setInitalUserBank(initalUserBankForm)
+    }
+
     return (
         <Dialog open={open} onClose={closeModal} fullWidth >
             <DialogTitle>{"สมุดบัญชีผู้ใช้งาน"}</DialogTitle>
@@ -148,7 +185,7 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
                         <Box>
                             <Formik
                                 onSubmit={onSubmitUserBankForm}
-                                initialValues={initalUserBankForm}
+                                initialValues={initalUserBank}
                                 validationSchema={userBankSchema}
                                 enableReinitialize>
                                 {({
@@ -210,9 +247,9 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
                                             ></TextField>
                                             <Box display={"flex"} flexDirection={"row"} justifyContent={"center"} alignItems={"center"} gap={2}>
                                                 <Button type="submit" color="success" variant="contained" disabled={!isValid || !dirty}>
-                                                    เพิ่มสมุดบัญชี
+                                                    {!editUserBankId ? "เพิ่มสมุดบัญชี" : "บันทึกแก้ไขสมุดบัญชี"}
                                                 </Button>
-                                                <Button color="inherit" variant="contained" onClick={() => setAddUserBank(false)}>
+                                                <Button color="inherit" variant="contained" onClick={onCancelEditUserBank}>
                                                     ยกเลิก
                                                 </Button>
                                             </Box>
@@ -225,11 +262,18 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
                     <Stack direction={"column"} spacing={1}>
                         {userBank?.map((item, index) => (
                             <Paper key={index} elevation={2} sx={{ display: "flex", flexDirection: "column", p: 2, position: 'relative' }} >
-                                <Tooltip title="ลบบัญชีนี้" sx={{ position: "absolute", top: 1, right: 1 }}>
-                                    <IconButton onClick={() => onRemoveUserBankClick(item.user_bank_id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
+                                <Box display={"flex"} gap={0.5} sx={{ position: "absolute", top: 1, right: 1 }}>
+                                    <Tooltip title="แก้ไขบัญชีนี้">
+                                        <IconButton onClick={() => onEditUserBankClick(item)}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="ลบบัญชีนี้">
+                                        <IconButton onClick={() => onRemoveUserBankClick(item.user_bank_id)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
                                 <Typography>ธนาคาร: {item.bank_name_th} {item.bank_name_en}</Typography>
                                 <Typography>เลขบัญชี: {item.user_bank_code}</Typography>
                                 <Typography>ชื่อบัญชี: {item.user_bank_name}</Typography>
