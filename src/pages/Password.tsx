@@ -68,6 +68,7 @@ export default function Password() {
                     handleChange,
                     handleSubmit,
                     isValid,
+                    dirty
                 }) => (
                     <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                         <Box
@@ -112,7 +113,7 @@ export default function Password() {
                                 error={!!touched.new_pass2 && !!errors.new_pass2}
                                 helperText={touched.new_pass2 && errors.new_pass2}
                             ></TextField>
-                            <Button type="submit" color="primary" variant="contained" disabled={(!isValid)}>
+                            <Button type="submit" color="primary" variant="contained" disabled={(!isValid || !dirty)}>
                                 แก้ไขรหัสผ่าน
                             </Button>
                         </Box>
