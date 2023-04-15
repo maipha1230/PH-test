@@ -24,6 +24,7 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import PasswordIcon from '@mui/icons-material/Password';
 import { useNavigate } from 'react-router-dom';
+import Drawer from '@mui/material/Drawer';
 
 const drawerWidth = 220;
 
@@ -57,23 +58,25 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        width: drawerWidth,
-        zIndex: 500,
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-        boxSizing: 'border-box',
-        ...(open && {
-            ...openedMixin(theme),
-            '& .MuiDrawer-paper': openedMixin(theme),
-        }),
-        ...(!open && {
-            ...closedMixin(theme),
-            '& .MuiDrawer-paper': closedMixin(theme),
-        }),
-    }),
-);
+// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+//     ({ theme, open }) => ({
+//         width: drawerWidth,
+//         zIndex: 500,
+//         flexShrink: 0,
+//         whiteSpace: 'nowrap',
+//         boxSizing: 'border-box',
+//         ...(open && {
+//             ...openedMixin(theme),
+//             '& .MuiDrawer-paper': openedMixin(theme),
+//         }),
+//         ...(!open && {
+//             ...closedMixin(theme),
+//             '& .MuiDrawer-paper': closedMixin(theme),
+//         }),
+//     }),
+// );
+
+
 
 type MenuProps = {
     open: boolean;
@@ -111,40 +114,67 @@ export default function SideBar({ open, handleDrawerClose }: MenuProps) {
         }
     ]
 
+    const drawer = (
+        <List>
+            {menu.map((m, index) => (
+                <ListItem key={index} disablePadding sx={{ display: 'block' }} onClick={() => onMenuClick(m.to)}>
+                    <ListItemButton
+                        sx={{
+                            minHeight: 48,
+                            justifyContent: open ? 'initial' : 'center',
+                            px: 2.5,
+                        }}
+                    >
+                        <ListItemIcon
+                            sx={{
+                                minWidth: 0,
+                                mr: open ? 3 : 'auto',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {m.icon}
+                        </ListItemIcon>
+                        <ListItemText primary={m.title} sx={{ opacity: open ? 1 : 0 }} />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </List>
+    )
+
+    const onMenuClick = (path: string) => {
+        navigate(path)
+        handleDrawerClose()
+    }
+
     return (
-        <Drawer variant="permanent" open={open} >
+        <Drawer
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                '& .MuiDrawer-paper': {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                },
+            }}
+            // variant="persistent"
+            anchor="left"
+            open={open}
+            ModalProps={{
+                keepMounted: true,// Better open performance on mobile.
+                onBackdropClick: handleDrawerClose
+            }}
+           
+        >
             <DrawerHeader>
                 <img src="/Untitled-1-01.png" width={"120px"} style={{ marginRight: "30px" }} />
                 <IconButton onClick={handleDrawerClose}>
                     {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
             </DrawerHeader>
-            <Divider sx={{ mt:1 }} />
-            <List>
-                {menu.map((m, index) => (
-                    <ListItem key={index} disablePadding sx={{ display: 'block' }} onClick={() => navigate(m.to)}>
-                        <ListItemButton
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                        >
-                            <ListItemIcon
-                                sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                {m.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={m.title} sx={{ opacity: open ? 1 : 0 }} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
+            <Divider />
+            {drawer}
             <Divider />
         </Drawer>
+
     );
 }

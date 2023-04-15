@@ -27,7 +27,7 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
+    marginLeft: drawerWidth - 20,
     width: `calc(100% - ${drawerWidth}px)`,
     zIndex: 990,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -77,8 +77,8 @@ export default function Header({ open, handleDrawerOpen }: HeaderProps) {
         >
           <MenuIcon />
         </IconButton>
-        <Box display={"flex"} justifyContent="space-between" p={2} width={"100%"}>
-          <Box display={"flex"} gap="1.5rem" alignItems="center">
+        <Box display={"flex"} justifyContent="space-between" p={1} width={"100%"} sx={{ justifyContent: {xs: "flex-end", md: "space-between"} }} >
+          <Box display={"flex"} gap="1.5rem" alignItems="center" sx={{ display: { xs: 'none', md: "flex" } }}>
             <CalendarMonthIcon />
             <Typography variant="subtitle1">
               {date.toLocaleDateString("en-GB", {

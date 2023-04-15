@@ -26,6 +26,8 @@ import Hospital from '../pages/Hospital';
 import User from '../pages/User';
 import BankAccount from '../pages/BankAccount';
 
+const drawerWidth = 220
+
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -33,6 +35,25 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
+}));
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+    open?: boolean;
+}>(({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    // marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
+    }),
 }));
 
 export default function AdminLayout() {
@@ -51,10 +72,14 @@ export default function AdminLayout() {
         <Box sx={{ display: 'flex' }}>
             <Header open={open} handleDrawerOpen={handleDrawerOpen} />
             <SideBar open={open} handleDrawerClose={handleDrawerClose} />
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
                 <Outlet />
-            </Box>
+            </Box> */}
+            <Main open={open}>
+                <DrawerHeader />
+                <Outlet />
+            </Main>
         </Box>
     );
 }
