@@ -23,7 +23,7 @@ const userBankSchema = yup.object().shape({
 });
 
 const initalUserBankForm = {
-    bank_id: 2,
+    bank_id: 1,
     user_bank_code: "",
     user_bank_name: ""
 }
@@ -86,7 +86,7 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
     }
 
     const getBanks = async () => {
-        const res = await axios.get("/banks/get-banks")
+        const res = await axios.get("/banks/get-bank-select")
         if (res.status == 200) {
             setBanks(res.data)
         }
@@ -212,6 +212,7 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
                                                 value={values.bank_id}
+                                                placeholder='เลือกธนาคาร'
                                                 name="bank_id"
                                                 error={!!touched.bank_id && !!errors.bank_id}
                                             >
