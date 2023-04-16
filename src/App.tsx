@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@emotion/react'
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useRef } from 'react'
 import { theme } from './theme'
 import { CssBaseline } from '@mui/material'
 import Routes from './routes/Routes'

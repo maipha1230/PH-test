@@ -1,8 +1,6 @@
 import { Box, Button, Divider, Typography, useTheme, TextField } from '@mui/material'
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react'
-import HospitalDialog from '../components/HospitalDialog.js';
-import { ensureRemoveHospital, ensureRemoveUser, successAlert } from '../sweetAlert/sweetAlert.js';
+import {  ensureRemoveUser, successAlert } from '../sweetAlert/sweetAlert.js';
 import { UserModel } from '../models/User.model.js';
 import UserDialog from '../components/UserDialog.js';
 import UserHospitalDialog from '../components/UserHospitalDialog.js';
@@ -54,7 +52,7 @@ export default function User() {
     },
     {
       name: "user_lastname_en",
-      label: "นามสกุลผู้ใช้(งานอังกฤษ)",
+      label: "นามสกุลผู้ใช้(อังกฤษ)",
       options: {
         filter: false,
         sort: false,

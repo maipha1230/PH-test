@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Box, Container, Typography, useTheme, TextField, Button, useMediaQuery } from "@mui/material";
+import { Box, Typography, useTheme, TextField, Button, useMediaQuery } from "@mui/material";
 import * as yup from "yup";
 import { Formik } from "formik";
-import { LoginUserModel } from "../models/LoginUser.model";
-import { TextFields } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { successAlert, waringAlert } from "../sweetAlert/sweetAlert";
 import axios from "axios";
 

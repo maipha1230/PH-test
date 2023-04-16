@@ -4,12 +4,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { TextField, Button, Box, Switch, Typography, Chip, Stack, Grid, Paper, Pagination, Tooltip } from "@mui/material"
-import * as yup from "yup";
-import { Formik } from "formik";
+import { TextField, Button, Box, Typography, Chip, Stack, Grid, Paper, Pagination, Tooltip } from "@mui/material"
 import { UserModel } from '../models/User.model';
-import { ensureAddUserHospital, ensureRemoveUserHospital, successAlert } from '../sweetAlert/sweetAlert';
-import { HospitalModel } from '../models/Hospital.model';
 import axios from 'axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -73,13 +69,13 @@ export default function HospitalUserDialog({ open, handleDialogClose, hospitalId
         <Dialog open={open} onClose={closeModal} fullWidth maxWidth={"xl"} sx={{ height: "80vh" }} >
             <DialogTitle>{"พนักงานในโรงพยาบาล"}</DialogTitle>
             <DialogContent>
-                <Box p={{xs: 0, md: 3}} display={"flex"} flexDirection={"column"} gap={3} justifyContent={"center"} alignItems={"center"}>
+                <Box p={{ xs: 0, md: 3 }} display={"flex"} flexDirection={"column"} gap={3} justifyContent={"center"} alignItems={"center"}>
                     <Grid container spacing={2}>
                         {userHospital?.map((item, index) => (
                             <Grid key={index} item xs={12} md={6} lg={4}>
                                 <Tooltip title="ไปยังโปรไฟล์ผู้ใช้">
-                                    <Paper variant="outlined" 
-                                        onClick={() => onUserClick(item.user_id)}    
+                                    <Paper variant="outlined"
+                                        onClick={() => onUserClick(item.user_id)}
                                         sx={{ display: "flex", flexDirection: "column", gap: 1, position: "relative", p: 2, "&:hover": { scale: "102%", cursor: "pointer", borderColor: "#23c6c8" } }}>
                                         <Typography>รหัสพนักงาน: {item.user_code}</Typography>
                                         <Typography>ชื่อ-นามสกุล(ไทย): {item.user_firstname_th} {item.user_lastname_th}</Typography>

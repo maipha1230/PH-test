@@ -4,14 +4,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { TextField, Button, Box, Switch, Typography, Chip } from "@mui/material"
-import * as yup from "yup";
-import { Formik } from "formik";
-import { UserModel } from '../models/User.model';
+import {  Box, Chip } from "@mui/material"
 import { ensureAddUserHospital, ensureRemoveUserHospital, successAlert } from '../sweetAlert/sweetAlert';
 import { HospitalModel } from '../models/Hospital.model';
 import axios from 'axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type dialogInput = {
     open: boolean,

@@ -4,10 +4,10 @@ import AdminLayout from '../layout/AdminLayout'
 const Dashboard = lazy(() => import("../pages/Dashboard"))
 const Hospital = lazy(() => import("../pages/Hospital"))
 const User = lazy(() => import("../pages/User"))
-const BankAccount = lazy(() => import("../pages/BankAccount"))
 const LoginPage = lazy(() => import("../pages/LoginPage"))
 const Bank = lazy(() => import("../pages/Bank"))
 const Password = lazy(() => import("../pages/Password"))
+const NotFound = lazy(() => import("../pages/NotFound"))
 
 const useAuth = () => {
     let token = localStorage.getItem("access-token")
@@ -41,10 +41,6 @@ export default function Routes() {
                     element: <User />
                 },
                 {
-                    path: "user-bank-account",
-                    element: <BankAccount />
-                },
-                {
                     path: "/banks",
                     element: <Bank />
                 },
@@ -65,6 +61,9 @@ export default function Routes() {
                     path: "/", element: <Navigate to="/login" />
                 }
             ]
+        },
+        {
+            path: "*", element: <NotFound />
         }
     ])
 

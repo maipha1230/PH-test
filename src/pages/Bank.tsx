@@ -1,5 +1,4 @@
 import { Box, Button, Divider, Typography, useTheme, TextField } from '@mui/material'
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import React, { useEffect, useMemo, useState } from 'react'
 import { ensureRemoveBank, successAlert } from '../sweetAlert/sweetAlert.js';
 import { BankModel } from '../models/Bank.model.js';
@@ -17,24 +16,6 @@ export default function Bank() {
     useEffect(() => {
         getBanks()
     }, [dialogBank])
-
-
-    const column_data: GridColDef[] = [
-        { field: 'bank_name_th', headerName: 'ธนาคาร(ไทย)', flex: 1 },
-        { field: 'bank_name_en', headerName: 'ธนาคาร(อังกฤษ)', flex: 1 },
-        {
-            field: 'bank_id', headerName: 'จัดการ', flex: 1, renderCell: (row) => {
-                return <Box display={"flex"} flexDirection={"row"} gap={1} justifyContent={"center"} alignItems={"center"} width={"50%"}>
-                    <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
-                        แก้ไข
-                    </Button>
-                    <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
-                        ลบ
-                    </Button>
-                </Box>
-            }
-        }
-    ]
 
     const columns = [
         {

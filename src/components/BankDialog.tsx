@@ -5,7 +5,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { TextField, Button, Box } from "@mui/material"
-import { HospitalModel } from '../models/Hospital.model';
 import * as yup from "yup";
 import { Formik } from "formik";
 import { successAlert } from '../sweetAlert/sweetAlert';

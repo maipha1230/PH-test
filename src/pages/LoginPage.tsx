@@ -1,10 +1,9 @@
 import React from "react";
-import { Box, Container, Typography, useTheme, TextField, Button } from "@mui/material";
+import { Box, Typography, useTheme, TextField, Button } from "@mui/material";
 import * as yup from "yup";
 import { Formik } from "formik";
 import { LoginUserModel } from "../models/LoginUser.model";
-import { TextFields } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { successAlert } from "../sweetAlert/sweetAlert";
 import axios from "axios";
 
@@ -63,7 +62,7 @@ export default function LoginPage() {
                 <Typography variant="h4" fontWeight={"bold"} sx={{ color: "#2e5596" }}>
                     เข้าสู่ระบบ
                 </Typography>
-                <img src="/Untitled-1-01.png" width={"200px"} style={{ objectFit: "cover" }} />
+                <img src="/PH-MAIN.png" width={"200px"} style={{ objectFit: "cover" }} />
                 <Typography variant="h6" sx={{ color: "#2e5596", display: { xs: "none", md: "block" } }} >
                     ระบบจัดการผู้ใช้งาน Principal Healthcare
                 </Typography>

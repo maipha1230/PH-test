@@ -1,5 +1,4 @@
 import { Box, Grid, Paper, Typography, useTheme } from '@mui/material'
-import { cyan, blue } from '@mui/material/colors'
 import Chart from "react-apexcharts";
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
