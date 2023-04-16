@@ -44,9 +44,8 @@ export default function LoginPage() {
             display={"flex"}
             justifyContent={"center"}
             alignItems={"center"}
-            minHeight={"100vh"}
             sx={{ background: "#e1e2fe" }}
-            maxWidth={"100vw"}
+            minHeight={"100vh"}
         >
             <Box
                 display={"flex"}
@@ -54,7 +53,6 @@ export default function LoginPage() {
                 justifyContent={"center"}
                 alignItems={"center"}
                 width={{ xs: "100vw", md: "450px" }}
-                height={{ xs: "100vh", md: "auto" }}
                 py={"2rem"}
                 px={"1.5rem"}
                 borderRadius={"2rem"}

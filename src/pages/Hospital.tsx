@@ -44,7 +44,7 @@ export default function Hospital() {
       name: "created_at",
       label: "เข้าร่วมเมื่อ",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
         customBodyRender: (value: string) => <span>{new Date(value).toLocaleDateString("en-GB", {
           day: "numeric",
@@ -57,7 +57,7 @@ export default function Hospital() {
       name: "hospital_id",
       label: "จัดการ",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
         customBodyRender: (value: number) => {
           return (

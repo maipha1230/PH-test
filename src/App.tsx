@@ -42,7 +42,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="app" style={{ minWidth: "100vh", height: "100%", width: "100%" }}>
+      <div className="app" style={{ maxWidth: "100vw", maxHeight: "100vh" }}>
         <Suspense
           fallback={
             <Loader />

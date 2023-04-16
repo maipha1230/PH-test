@@ -57,7 +57,7 @@ export default function Bank() {
             name: "bank_id",
             label: "จัดการ",
             options: {
-                filter: true,
+                filter: false,
                 sort: false,
                 customBodyRender: (value: number) => {
                     return (

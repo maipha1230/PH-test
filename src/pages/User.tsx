@@ -40,7 +40,7 @@ export default function User() {
       name: "user_lastname_th",
       label: "นามสกุลผู้ใช้(ไทย)",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
       }
     },
@@ -56,7 +56,7 @@ export default function User() {
       name: "user_lastname_en",
       label: "นามสกุลผู้ใช้(งานอังกฤษ)",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
       }
     },
@@ -64,7 +64,7 @@ export default function User() {
       name: "created_at",
       label: "เข้าร่วมเมื่อ",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
         customBodyRender: (value: string) => <span>{new Date(value).toLocaleDateString("en-GB", {
           day: "numeric",
@@ -77,7 +77,7 @@ export default function User() {
       name: "user_status",
       label: "สถานะผู้ใช้",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
         customBodyRender: (value: number) => {
           return (
@@ -90,7 +90,7 @@ export default function User() {
       name: "user_id",
       label: "จัดการ",
       options: {
-        filter: true,
+        filter: false,
         sort: false,
         customBodyRender: (value: number) => {
           return (

@@ -67,9 +67,9 @@ export default function Dashboard() {
           categories: categories,
           labels: {
             style: {
-              fontSize: '16px', // set the font size to 16 pixels
+              fontSize: '12px', // set the font size to 16 pixels
               fontWeight: 'bold', // set the font weight to bold
-              fontFamily: 'Chakra Petch, sans-serif'
+              fontFamily: 'Chakra Petch, sans-serif' 
             }
           }
         },
@@ -157,7 +157,7 @@ export default function Dashboard() {
           </Paper>}
         </Grid>
         <Grid item xs={12}>
-          <Paper elevation={3} sx={{ width: "100%", height: "60vh", p: 3 }}>
+          <Paper elevation={3} sx={{ width: "100%", height: "auto", p: 3 }}>
             <Typography variant='h6'>พนักงานในแต่ละโรงพยาบาล</Typography>
             {hospitaUserChart && <Chart options={hospitaUserChart} series={hospitaUserChart.series} type='bar' height={500}></Chart>}
           </Paper>
