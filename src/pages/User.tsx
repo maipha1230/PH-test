@@ -9,55 +9,110 @@ import UserHospitalDialog from '../components/UserHospitalDialog.js';
 import axios from 'axios';
 import UserBankDialog from '../components/UserBankDialog.js';
 import { useSearchParams } from 'react-router-dom';
+import MUIDataTable from "mui-datatables";
 
 export default function User() {
   const theme = useTheme();
-  const [users, setUsers] = useState<UserModel[] | null>(null)
+  const [users, setUsers] = useState<UserModel[]>([])
   const [dialogUser, setDialogUser] = useState<boolean>(false)
   const [dialogUserHospital, setDialogUserHospital] = useState<boolean>(false)
   const [dialogUserBank, setDialogUserBank] = useState<boolean>(false)
   const [userId, setUserId] = useState<number | null>(null)
 
-  const column_data: GridColDef[] = [
-    { field: 'user_code', headerName: 'รหัสผู้ใช้งาน', width: 150 },
-    { field: 'user_firstname_th', headerName: 'ชื่อ(ไทย)', flex: 1 },
-    { field: 'user_lastname_th', headerName: 'นามสกุล(ไทย)', flex: 1 },
-    { field: 'user_firstname_en', headerName: 'ชื่อ(อังกฤษ)', flex: 1 },
-    { field: 'user_lastname_en', headerName: 'นามสกุล(อังกฤษ)', flex: 1 },
+  const columns = [
     {
-      field: 'created_at', headerName: 'เข้าร่วมเมื่อ', width: 150, valueFormatter: (params) => new Date(params.value).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-    },
-    {
-      field: 'user_status', headerName: 'สถานะ', width: 150, renderCell: (row) => {
-        return <Box width={"60%"} gap={1} m={"0 auto"} borderRadius={1.5} display={"flex"} justifyContent={"center"} sx={{ backgroundColor: row.value == 1 ? 'green' : 'gray' }}>
-          <Typography color={'white'}>{row.value == 1 ? 'อนุมัติแล้ว' : 'ยังไม่อนุมัติ'}</Typography>
-        </Box>
-
+      name: "user_code",
+      label: "รหัสผู้ใช้",
+      options: {
+        filter: true,
+        sort: true,
       }
     },
     {
-      field: 'user_id', headerName: 'จัดการ', flex: 1.5, renderCell: (row) => {
-        return <Box display={"flex"} flexDirection={"row"} gap={0.5} justifyContent={"center"} alignItems={"center"} width={"100%"}>
-          <Button color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
-            แก้ไข
-          </Button>
-          <Button color='secondary' variant='contained' onClick={() => onHospitalClick(row.value)}>
-            โรงพยาบาล
-          </Button>
-          <Button color='success' variant='contained' onClick={() => onUserBankClick(row.value)}>
-            สมุดบัญชี
-          </Button>
-          <Button color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
-            ลบ
-          </Button>
-        </Box>
+      name: "user_firstname_th",
+      label: "ชื่อผู่ใช้(ไทย)",
+      options: {
+        filter: true,
+        sort: false,
       }
-    }
-  ]
+    },
+    {
+      name: "user_lastname_th",
+      label: "นามสกุลผู้ใช้(ไทย)",
+      options: {
+        filter: true,
+        sort: false,
+      }
+    },
+    {
+      name: "user_firstname_en",
+      label: "ชื่อผู้ใช้(อังกฤษ)",
+      options: {
+        filter: true,
+        sort: false,
+      }
+    },
+    {
+      name: "user_lastname_en",
+      label: "นามสกุลผู้ใช้(งานอังกฤษ)",
+      options: {
+        filter: true,
+        sort: false,
+      }
+    },
+    {
+      name: "created_at",
+      label: "เข้าร่วมเมื่อ",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value: string) => <span>{new Date(value).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}</span>
+      }
+    },
+    {
+      name: "user_status",
+      label: "สถานะผู้ใช้",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value: number) => {
+          return (
+            <Typography color={value == 1 ? "#3e8e46" : "#d32f2f"}>{value == 1 ? 'อนุมัติแล้ว' : 'ยังไม่อนุมัติ'}</Typography>
+          )
+        }
+      }
+    },
+    {
+      name: "user_id",
+      label: "จัดการ",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value: number) => {
+          return (
+            <Box display={"flex"} flexDirection={{ xs: "column", lg: "row" }} gap={0.5} justifyContent={"center"} alignItems={"center"} width={"100%"}>
+              <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(value)}>
+                แก้ไข
+              </Button>
+              <Button fullWidth color='secondary' variant='contained' onClick={() => onHospitalClick(value)}>
+                โรงพยาบาล
+              </Button>
+              <Button fullWidth color='success' variant='contained' onClick={() => onUserBankClick(value)}>
+                สมุดบัญชี
+              </Button>
+              <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(value)}>
+                ลบ
+              </Button>
+            </Box>
+          )
+        }
+      }
+    },
+  ];
 
   const [searchParams] = useSearchParams();
 
@@ -136,7 +191,7 @@ export default function User() {
 
 
   return (
-    <Box display={"flex"} flexDirection={"column"} p={2}>
+    <Box display={"flex"} flexDirection={"column"} p={{ xs: 0, md: 2 }}>
       <Typography variant='h5'>
         ผู้ใช้งาน
       </Typography>
@@ -147,17 +202,12 @@ export default function User() {
         </Button>
       </Box>
       <Box width={"100%"} maxWidth={"100wh"} height={"70vh"} mt={3}>
-        {users && (
-          <DataGrid
-            rows={users}
-            columns={column_data}
-            getRowId={(row: any) => row.user_id}
-            components={{ Toolbar: GridToolbar }}
-            showCellVerticalBorder
-            showColumnVerticalBorder
-            sx={{ width: "100%" }}
-          />
-        )}
+        <MUIDataTable
+          title={"ตารางผู้ใช้งาน"}
+          data={users}
+          columns={columns}
+          options={{ filterType: 'checkbox', }}
+        />
       </Box>
       {/* dialog user */}
       {dialogUser && <UserDialog open={dialogUser} handleDialogClose={handleDialogClose} userId={userId} />}

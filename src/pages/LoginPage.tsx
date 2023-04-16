@@ -46,13 +46,15 @@ export default function LoginPage() {
             alignItems={"center"}
             minHeight={"100vh"}
             sx={{ background: "#e1e2fe" }}
+            maxWidth={"100vw"}
         >
             <Box
                 display={"flex"}
                 flexDirection={"column"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                width={"450px"}
+                width={{ xs: "100vw", md: "450px" }}
+                height={{ xs: "100vh", md: "auto" }}
                 py={"2rem"}
                 px={"1.5rem"}
                 borderRadius={"2rem"}
@@ -64,9 +66,17 @@ export default function LoginPage() {
                     เข้าสู่ระบบ
                 </Typography>
                 <img src="/Untitled-1-01.png" width={"200px"} style={{ objectFit: "cover" }} />
-                <Typography variant="h6" sx={{ color: "#2e5596" }}>
+                <Typography variant="h6" sx={{ color: "#2e5596", display: { xs: "none", md: "block" } }} >
                     ระบบจัดการผู้ใช้งาน Principal Healthcare
                 </Typography>
+                <Box display={{ xs: "flex", md: "none" }} flexDirection={"column"} gap={0.2} alignItems={"center"}>
+                    <Typography variant="h6" sx={{ color: "#2e5596" }} >
+                        ระบบจัดการผู้ใช้งาน
+                    </Typography>
+                    <Typography variant="h6" sx={{ color: "#2e5596" }} >
+                        Principal Healthcare
+                    </Typography>
+                </Box>
                 <Formik
                     onSubmit={onSubmitLogin}
                     initialValues={initialLoginForm}

@@ -5,18 +5,19 @@ import { ensureRemoveBank, successAlert } from '../sweetAlert/sweetAlert.js';
 import { BankModel } from '../models/Bank.model.js';
 import BankDialog from '../components/BankDialog.js';
 import axios from 'axios';
+import MUIDataTable from "mui-datatables";
 
 export default function Bank() {
     const theme = useTheme();
-    const [banks, setBanks] = useState<BankModel[] | null>(null)
+    const [banks, setBanks] = useState<BankModel[]>([])
     const [dialogBank, setDialogBank] = useState<boolean>(false)
     const [bankId, setBankId] = useState<number | null>(null)
 
 
     useEffect(() => {
-       getBanks()
+        getBanks()
     }, [dialogBank])
-    
+
 
     const column_data: GridColDef[] = [
         { field: 'bank_name_th', headerName: 'ธนาคาร(ไทย)', flex: 1 },
@@ -35,7 +36,47 @@ export default function Bank() {
         }
     ]
 
-    const getBanks = async() => {
+    const columns = [
+        {
+            name: "bank_name_th",
+            label: "ชื่อธนาคาร(ไทย)",
+            options: {
+                filter: true,
+                sort: true,
+            }
+        },
+        {
+            name: "bank_name_en",
+            label: "ชื่อธนาคาร(อังกฤษ)",
+            options: {
+                filter: true,
+                sort: false,
+            }
+        },
+        {
+            name: "bank_id",
+            label: "จัดการ",
+            options: {
+                filter: true,
+                sort: false,
+                customBodyRender: (value: number) => {
+                    return (
+                        <Box display={"flex"} flexDirection={{ xs: "column", md: "row" }} gap={1} justifyContent={"center"} alignItems={"center"} width={{ xs: "100%", md: "50%" }}>
+                            <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(value)}>
+                                แก้ไข
+                            </Button>
+                            <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(value)}>
+                                ลบ
+                            </Button>
+                        </Box>
+                    )
+                }
+            }
+        },
+    ];
+
+
+    const getBanks = async () => {
         const res = await axios.get("/banks/get-banks")
         if (res.status == 200) {
             setBanks(res.data)
@@ -82,7 +123,7 @@ export default function Bank() {
                 </Button>
             </Box>
             <Box width={"100%"} maxWidth={"100wh"} height={"70vh"} mt={3}>
-                {banks && (
+                {/* {banks && (
                     <DataGrid
                         rows={banks}
                         columns={column_data}
@@ -92,7 +133,13 @@ export default function Bank() {
                         showColumnVerticalBorder
 
                     />
-                )}
+                )} */}
+                <MUIDataTable
+                    title={"ตารางธนาคาร"}
+                    data={banks}
+                    columns={columns}
+                    options={{ filterType: 'checkbox', }}
+                />
             </Box>
             {/* dialog bank */}
             {dialogBank && <BankDialog open={dialogBank} handleDialogClose={handleDialogClose} bankId={bankId} />}

@@ -91,12 +91,12 @@ export default function Dashboard() {
 
 
   return (
-    <Box display={"flex"} gap={2} flexDirection={"column"} p={3} >
+    <Box display={"flex"} gap={2} flexDirection={"column"} p={ {xs: 0, md: 3}} >
       <Typography variant='h5'>
         แดชบอร์ด
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} lg={3} >
           {hospitalCount && <Paper elevation={3}
             sx={{
               border: "none",
@@ -111,7 +111,7 @@ export default function Dashboard() {
             </Box>
           </Paper>}
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           {userCount && <Paper elevation={3}
             sx={{
               border: "none",
@@ -126,7 +126,7 @@ export default function Dashboard() {
             </Box>
           </Paper>}
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           {adminCount && <Paper elevation={3}
             sx={{
               border: "none",
@@ -141,7 +141,7 @@ export default function Dashboard() {
             </Box>
           </Paper>}
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           {userBankCount && <Paper elevation={3}
             sx={{
               border: "none",

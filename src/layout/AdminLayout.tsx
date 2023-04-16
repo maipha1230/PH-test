@@ -41,7 +41,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     open?: boolean;
 }>(({ theme, open }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -76,7 +76,7 @@ export default function AdminLayout() {
                 <DrawerHeader />
                 <Outlet />
             </Box> */}
-            <Main open={open}>
+            <Main open={open} sx={{maxWidth: "100vw"}}>
                 <DrawerHeader />
                 <Outlet />
             </Main>

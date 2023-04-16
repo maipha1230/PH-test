@@ -73,10 +73,10 @@ export default function HospitalUserDialog({ open, handleDialogClose, hospitalId
         <Dialog open={open} onClose={closeModal} fullWidth maxWidth={"xl"} sx={{ height: "80vh" }} >
             <DialogTitle>{"พนักงานในโรงพยาบาล"}</DialogTitle>
             <DialogContent>
-                <Box p={3} display={"flex"} flexDirection={"column"} gap={3} justifyContent={"center"} alignItems={"center"}>
+                <Box p={{xs: 0, md: 3}} display={"flex"} flexDirection={"column"} gap={3} justifyContent={"center"} alignItems={"center"}>
                     <Grid container spacing={2}>
                         {userHospital?.map((item, index) => (
-                            <Grid key={index} item xs={4}>
+                            <Grid key={index} item xs={12} md={6} lg={4}>
                                 <Tooltip title="ไปยังโปรไฟล์ผู้ใช้">
                                     <Paper variant="outlined" 
                                         onClick={() => onUserClick(item.user_id)}    

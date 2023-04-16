@@ -178,8 +178,8 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
             <DialogContent>
                 <Box width={"100%"} display={"flex"} flexDirection={"column"} gap={2} justifyContent={"center"}>
                     {addUserBank == false && (
-                        <Box width={"50%"}>
-                            <Button variant='contained' color='success' onClick={() => onAddUserBankClick(addUserBank)}>เพิ่มสมุดบัญชีของผู้ใช้</Button>
+                        <Box width={{ xs: "100%", sm: "50%" }}>
+                            <Button fullWidth variant='contained' color='success' onClick={() => onAddUserBankClick(addUserBank)}>เพิ่มสมุดบัญชี</Button>
                         </Box>)}
                     {addUserBank && (
                         <Box>
@@ -262,7 +262,7 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
                     <Stack direction={"column"} spacing={1}>
                         {userBank?.map((item, index) => (
                             <Paper key={index} elevation={2} sx={{ display: "flex", flexDirection: "column", p: 2, position: 'relative' }} >
-                                <Box display={"flex"} gap={0.5} sx={{ position: "absolute", top: 1, right: 1 }}>
+                                <Box display={{ xs: "none", sm: "flex" }} gap={0.5} sx={{ position: "absolute", top: 1, right: 1 }}>
                                     <Tooltip title="แก้ไขบัญชีนี้">
                                         <IconButton onClick={() => onEditUserBankClick(item)}>
                                             <EditIcon />
@@ -277,6 +277,18 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
                                 <Typography>ธนาคาร: {item.bank_name_th} {item.bank_name_en}</Typography>
                                 <Typography>เลขบัญชี: {item.user_bank_code}</Typography>
                                 <Typography>ชื่อบัญชี: {item.user_bank_name}</Typography>
+                                <Box display={{ xs: "flex", sm: "none" }} justifyContent={"flex-end"} gap={0.2}>
+                                    <Tooltip title="แก้ไขบัญชีนี้">
+                                        <IconButton onClick={() => onEditUserBankClick(item)}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="ลบบัญชีนี้">
+                                        <IconButton onClick={() => onRemoveUserBankClick(item.user_bank_id)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
                             </Paper>
                         ))
                         }

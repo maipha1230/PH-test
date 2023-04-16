@@ -143,7 +143,6 @@ export default function SideBar({ open, handleDrawerClose }: MenuProps) {
 
     const onMenuClick = (path: string) => {
         navigate(path)
-        handleDrawerClose()
     }
 
     return (

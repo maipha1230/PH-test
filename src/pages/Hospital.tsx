@@ -6,41 +6,79 @@ import HospitalDialog from '../components/HospitalDialog.js';
 import { ensureRemoveHospital, successAlert } from '../sweetAlert/sweetAlert.js';
 import axios from 'axios';
 import HospitalUserDialog from '../components/HospitalUserDialog.js';
+import MUIDataTable from "mui-datatables";
 
 export default function Hospital() {
   const theme = useTheme();
-  const [hospitals, setHospitals] = useState<HospitalModel[] | null>(null)
+  const [hospitals, setHospitals] = useState<HospitalModel[]>([])
   const [dialogHospital, setDialogHospital] = useState<boolean>(false)
   const [dialogUserHospital, setDialogUserHospital] = useState<boolean>(false)
   const [hostpitalId, setHostpitalId] = useState<number | null>(null)
 
-  const column_data: GridColDef[] = [
-    { field: 'hospital_code', headerName: 'รหัสโรงพยาบาล', width: 200 },
-    { field: 'hospital_name_th', headerName: 'ชื่อไทย', flex: 1 },
-    { field: 'hospital_name_en', headerName: 'ชื่ออังกฤษ', flex: 1 },
+  const columns = [
     {
-      field: 'created_at', headerName: 'เพิ่มเมื่อ', width: 200, valueFormatter: (params) => new Date(params.value).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
+      name: "hospital_code",
+      label: "รหัสโรงพยาบาล",
+      options: {
+        filter: true,
+        sort: true,
+      }
     },
     {
-      field: 'hospital_id', headerName: 'จัดการ', flex: 1, renderCell: (row) => {
-        return <Box display={"flex"} flexDirection={"row"} gap={1} justifyContent={"center"} alignItems={"center"} width={"50%"}>
-          <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(row.value)}>
-            แก้ไข
-          </Button>
-          <Button fullWidth color='secondary' variant='contained' onClick={() => onUserInHospital(row.value)}>
-            พนักงาน
-          </Button>
-          <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(row.value)}>
-            ลบ
-          </Button>
-        </Box>
+      name: "hospital_name_th",
+      label: "ชื่อโรงพยาบาล(ไทย)",
+      options: {
+        filter: true,
+        sort: false,
       }
-    }
-  ]
+    },
+    {
+      name: "hospital_name_en",
+      label: "ชื่อโรงพยาบาล(อังกฤษ)",
+      options: {
+        filter: true,
+        sort: false,
+      }
+    },
+    {
+      name: "created_at",
+      label: "เข้าร่วมเมื่อ",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value: string) => <span>{new Date(value).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}</span>
+      }
+    },
+    {
+      name: "hospital_id",
+      label: "จัดการ",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value: number) => {
+          return (
+            <Box display={"flex"} flexDirection={{xs: "column", sm: "row"}} gap={1} justifyContent={"center"} alignItems={"center"} width={{xs: "100%", lg: "50%"}}>
+              <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(value)}>
+                แก้ไข
+              </Button>
+              <Button fullWidth color='secondary' variant='contained' onClick={() => onUserInHospital(value)}>
+                พนักงาน
+              </Button>
+              <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(value)}>
+                ลบ
+              </Button>
+            </Box>
+          )
+        }
+      }
+    },
+
+  ];
+
 
   //use effect
   useEffect(() => {
@@ -109,16 +147,12 @@ export default function Hospital() {
         </Button>
       </Box>
       <Box width={"100%"} maxWidth={"100wh"} height={"70vh"} mt={3}>
-        {hospitals && (
-          <DataGrid
-            rows={hospitals}
-            columns={column_data}
-            getRowId={(row: any) => row.hospital_id}
-            components={{ Toolbar: GridToolbar }}
-            showCellVerticalBorder
-            showColumnVerticalBorder
-          />
-        )}
+        <MUIDataTable
+          title={"ตารางโรงพยาบาล"}
+          data={hospitals}
+          columns={columns}
+          options={{ filterType: 'checkbox', }}
+        />
       </Box>
       {/* dialog hospital */}
       {dialogHospital && <HospitalDialog open={dialogHospital} handleDialogClose={handleDialogHospitalClose} hospitalId={hostpitalId} />}

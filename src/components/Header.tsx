@@ -27,8 +27,8 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth - 20,
-    width: `calc(100% - ${drawerWidth}px)`,
+    // marginLeft: drawerWidth,
+    // width: `calc(100% - ${drawerWidth}px)`,
     zIndex: 990,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -63,7 +63,7 @@ export default function Header({ open, handleDrawerOpen }: HeaderProps) {
   }
 
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position="fixed" open={open} sx={{maxWidth: "100vw"}}>
       <Toolbar>
         <IconButton
           color="inherit"
