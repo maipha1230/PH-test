@@ -67,7 +67,7 @@ export default function Dashboard() {
           categories: categories,
           labels: {
             style: {
-              fontSize: '12px', // set the font size to 16 pixels
+              fontSize: '12px', // set the font size to 12 pixels
               fontWeight: 'bold', // set the font weight to bold
               fontFamily: 'Chakra Petch, sans-serif' 
             }
@@ -79,9 +79,11 @@ export default function Dashboard() {
               ranges: [{
                 from: 0,
                 to: 100,
-                color: '#2e5596' // set the bar color to red
+                color: '#2e5596'
               }]
-            }
+            },
+            borderRadius: 4,
+            horizontal: true,
           }
         },
       };
