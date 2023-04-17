@@ -1,6 +1,6 @@
 # PH-test
 
- สามารถทดสอบระบบได้ที่ http://203.158.201.117/
+ สามารถทดสอบระบบได้ที่ http://203.158.201.117/ (username: admin, password: princh@admin)
  
 แก้ไฟล์ .env 
 
