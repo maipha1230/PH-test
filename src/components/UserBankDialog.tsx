@@ -247,7 +247,7 @@ export default function UserBankDialog({ open, handleDialogClose, userId = null 
                                                 helperText={touched.user_bank_name && errors.user_bank_name}
                                             ></TextField>
                                             <Box display={"flex"} flexDirection={"row"} justifyContent={"center"} alignItems={"center"} gap={2}>
-                                                <Button type="submit" color="success" variant="contained" disabled={!isValid || !dirty}>
+                                                <Button type="submit" color="success" variant="contained" disabled={!isValid || !dirty || values.bank_id == 1}>
                                                     {!editUserBankId ? "เพิ่มสมุดบัญชี" : "บันทึกแก้ไขสมุดบัญชี"}
                                                 </Button>
                                                 <Button color="inherit" variant="contained" onClick={onCancelEditUserBank}>
