@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Typography, useTheme, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import {  ensureRemoveUser, successAlert } from '../sweetAlert/sweetAlert.js';
+import { ensureRemoveUser, successAlert, waringAlert } from '../sweetAlert/sweetAlert.js';
 import { UserModel } from '../models/User.model.js';
 import UserDialog from '../components/UserDialog.js';
 import UserHospitalDialog from '../components/UserHospitalDialog.js';
@@ -90,16 +90,16 @@ export default function User() {
       options: {
         filter: false,
         sort: false,
-        customBodyRender: (value: number) => {
+        customBodyRender: (value: number, tableMeta: any, updateValue: any) => {
           return (
             <Box display={"flex"} flexDirection={{ xs: "column", lg: "row" }} gap={0.5} justifyContent={"center"} alignItems={"center"} width={"100%"}>
               <Button fullWidth color='warning' variant='contained' onClick={() => onDetailClick(value)}>
                 แก้ไข
               </Button>
-              <Button fullWidth color='secondary' variant='contained' onClick={() => onHospitalClick(value)}>
+              <Button fullWidth color='secondary' variant='contained' onClick={() => onHospitalClick(value, tableMeta.rowData[6])}>
                 โรงพยาบาล
               </Button>
-              <Button fullWidth color='success' variant='contained' onClick={() => onUserBankClick(value)}>
+              <Button fullWidth color='success' variant='contained' onClick={() => onUserBankClick(value, tableMeta.rowData[6])}>
                 สมุดบัญชี
               </Button>
               <Button fullWidth color='error' variant='contained' onClick={() => onDeleteClick(value)}>
@@ -177,14 +177,22 @@ export default function User() {
     })
   }
 
-  const onHospitalClick = (id: number) => {
-    setUserId(id)
-    handleUserHospitalDialogOpen()
+  const onHospitalClick = (id: number, user_status: number) => {
+    if (user_status == 0) {
+      waringAlert("ไม่สามารถดูโรงพยาบาลได้เนื่องจากสถานะผู้ใช้ \"ยังไม่อนุมัติ\"")
+    } else {
+      setUserId(id)
+      handleUserHospitalDialogOpen()
+    }
   }
 
-  const onUserBankClick = (id: number) => {
-    setUserId(id)
-    handleUserBankDialogOpen()
+  const onUserBankClick = (id: number, user_status: number) => {
+    if (user_status == 0) {
+      waringAlert("ไม่สามารถดูบัญชีธนาคารได้เนื่องจากสถานะผู้ใช้ \"ยังไม่อนุมัติ\"")
+    } else {
+      setUserId(id)
+      handleUserBankDialogOpen()
+    }
   }
 
 
