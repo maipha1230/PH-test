@@ -35,7 +35,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
         user_lastname_en: "",
     })
 
-    const [userStatus, setUserStatus] = useState<number | null>(null)
+    const [userStatus, setUserStatus] = useState<number>(0)
     const [userCodeExist, setUserCodeExist] = useState<string | null>(null)
 
     useEffect(() => {
@@ -74,6 +74,8 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
     }
 
     const onsubmitUserForm = async (values: UserModel) => {
+        console.log(values);
+        
         if (userId) {
             const res = await axios.put(`/users/update-user/${userId}`, {
                 user_code: values.user_code,
@@ -81,6 +83,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                 user_lastname_th: values.user_lastname_th,
                 user_firstname_en: values.user_firstname_en,
                 user_lastname_en: values.user_lastname_en,
+                user_status: userStatus
             })
             if (res.status == 201) {
                 successAlert(res.data).then(() => {
@@ -94,6 +97,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                 user_lastname_th: values.user_lastname_th,
                 user_firstname_en: values.user_firstname_en,
                 user_lastname_en: values.user_lastname_en,
+                user_status: userStatus
             })
             if (res.status == 201) {
                 successAlert(res.data).then(() => {
@@ -103,23 +107,11 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
         }
     }
 
-    const handleUserStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUserStatusChange = (event: any) => {
         if (event.target.checked) {
             setUserStatus(1)
         } else {
             setUserStatus(0)
-        }
-
-        changeUserStatus()
-    }
-
-    const changeUserStatus = () => {
-        if (userId) {
-            axios.put(`/users/change-user-status/${userId}`, {}).then((res) => {
-                if (res.status == 200) {
-                    successAlert(res.data)
-                }
-            })
         }
     }
 
@@ -167,7 +159,6 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                         checked={userStatus == 1 ? true : false}
                         onChange={handleUserStatusChange}
                         inputProps={{ 'aria-label': 'สถานะผู้ใช้งาน' }}
-                        disabled={!userId}
                         color={userStatus == 1 ? 'success' : 'primary'}
                     />
                     {userId && <Typography variant='body1' style={{ color: userStatus == 1 ? 'green' : 'gray' }} >{userStatus == 1 ? 'อนุมัติแล้ว' : 'ยังไม่อนุมัติ'}</Typography>}
@@ -208,7 +199,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                                     error={!!touched.user_code && !!errors.user_code}
                                     helperText={touched.user_code && errors.user_code}
                                 ></TextField>
-                                { userCodeExist && <Typography pl={1.5} variant='subtitle2' color={'#fe0000'}>{userCodeExist}</Typography>}
+                                {userCodeExist && <Typography pl={1.5} variant='subtitle2' color={'#fe0000'}>{userCodeExist}</Typography>}
                                 <TextField
                                     fullWidth
                                     variant="outlined"
@@ -258,7 +249,7 @@ export default function UserDialog({ open, handleDialogClose, userId = null }: d
                                     helperText={touched.user_lastname_en && errors.user_lastname_en}
                                 ></TextField>
                                 <Box display={"flex"} flexDirection={"row"} justifyContent={"center"} alignItems={"center"} gap={2}>
-                                    <Button type="submit" color="success" variant="contained" disabled={!isValid || !dirty}>
+                                    <Button type="submit" color="success" variant="contained">
                                         บันทัก
                                     </Button>
                                     <Button color="inherit" variant="contained" onClick={closeModal}>

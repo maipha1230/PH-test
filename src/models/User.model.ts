@@ -5,7 +5,7 @@ export class UserModel {
     user_lastname_th?: string
     user_firstname_en?: string
     user_lastname_en?: string
-    user_status?: string
+    user_status?: number
     created_at?: Date
     updated_at?: Date
 
